@@ -1,5 +1,6 @@
 #include "trackerheader.h"
 #include "../Client/socket.cpp"
+using namespace std;
 //#define PORT 7000 
 
 class trackerdata
@@ -27,6 +28,19 @@ class trackerdata
 
 map<string,vector<trackerdata>> trackertable;
 
+
+void printeverything()
+{
+	for(auto it : trackertable)
+	{
+		string hs=it.first;
+		vector<trackerdata> temptd=it.second;
+    	for(int j=0;j<temptd.size();j++)
+    	{
+    		cout<<temptd[j].csocket<<"***"<<temptd[j].cfpath<<endl;
+    	}
+	}
+}
 int main(int argc, char *argv[])
 {
     socketclass trackersocket1;
@@ -91,9 +105,9 @@ int main(int argc, char *argv[])
 	        valread = read( new_socket , buffer, 1024); 
 	        printf("Server get Data from Client : %s\n",buffer );
 	    	 
-	    	string bufdata=string(buffer);
+	    	string data=string(buffer);
 	    	vector <string> tokens1;
-            stringstream check2(bufdata); 
+            stringstream check2(data); 
             string intermediate1;   
             // Tokenizing w.r.t. space '#' 
             while(getline(check2, intermediate1, '#'))
@@ -101,28 +115,63 @@ int main(int argc, char *argv[])
                 tokens1.push_back(intermediate1); 
             } 
             
-            trackerdata td(tokens1[0],tokens1[1],tokens1[2]);
+
             // string shorthash=tokens1[0];
             // string cleintsocket=tokens1[1];
             // string cleintfilepath=tokens1[2];
-            //cout<<shorthash<<"::"<<cleintsocket<<"::"<<cleintfilepath<<endl;
+            // cout<<shorthash<<"::"<<cleintsocket<<"::"<<cleintfilepath<<endl;
+
+            trackerdata td(tokens1[0],tokens1[1],tokens1[2]);
             
         	cout<<td.shash<<"::"<<td.csocket<<"::"<<td.cfpath<<endl;
 	        
-            trackertable[td.shash].push_back(td);
+            if(trackertable.find(td.shash) == trackertable.end())
+            {
+            	cout<<"if"<<endl;
+            	trackertable[td.shash].push_back(td);
+            }
+            else if(trackertable.find(td.shash) != trackertable.end())
+            {
+            	cout<<"else part"<<endl;
+            	vector<trackerdata> temptd=trackertable[td.shash];
+            	int flag=0;
+            	for(int j=0;j<temptd.size();j++)
+            	{
+            		if(temptd[j].csocket == td.csocket)
+            		{
+            			flag=1;
+            			break;
+            		}
+            	}
+            	cout<<"flag : "<<flag<<endl;
+            	if(flag)
+            	{
+            		cout<<"Server already has these data !!!"<<endl;
+            			
+            	}
+            	else{
+            		trackertable[td.shash].push_back(td);
+            	}
+            }
 
             vector<trackerdata> vectortd=trackertable[td.shash];
-            cout<<vectortd[0].shash<<"++"<<vectortd[0].csocket<<"++"<<vectortd[0].cfpath<<"++"<<endl;
-
-	        string msg;
-	        cout<<"\nEnter msg to send : ";
-	        cin>>msg;
-	        char *serverreply = new char[msg.length() + 1];
-			strcpy(serverreply, msg.c_str());
-			//cout<<"serverreply : "<<serverreply<<endl;
-	        send(new_socket , serverreply , strlen(serverreply) , 0 ); 
+            cout<<"vectortd for hash :"<<td.shash<<" "<<endl; 
+            for(int i=0;i<vectortd.size();i++)
+            {
+            	cout<<vectortd[i].shash<<"++"<<vectortd[i].csocket<<"++"<<vectortd[i].cfpath<<"++"<<endl;
+            }
+            
 	        
-	        printf("Reply message sent from server\n"); 
+	  //       string msg;
+	  //       cout<<"\nEnter msg to send : ";
+	  //       cin>>msg;
+	  //       char *serverreply = new char[msg.length() + 1];
+			// strcpy(serverreply, msg.c_str());
+			// //cout<<"serverreply : "<<serverreply<<endl;
+	  //       send(new_socket , serverreply , strlen(serverreply) , 0 ); 
+	        
+	  //       printf("Reply message sent from server\n"); 
+
 	     }
     }
 

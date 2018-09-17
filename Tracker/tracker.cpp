@@ -28,6 +28,58 @@ class trackerdata
 
 map<string,vector<trackerdata>> trackertable;
 
+
+void printeverything()
+{
+	for(auto it : trackertable)
+	{
+		string hs=it.first;
+		cout<<"\nData for Hash value : "<<hs<<endl;
+		vector<trackerdata> temptd=it.second;
+    	for(int j=0;j<temptd.size();j++)
+    	{
+    		cout<<temptd[j].csocket<<"***"<<temptd[j].cfpath<<endl;
+    	}
+	}
+}
+
+string executeshare(vector <string> tokens1,string data)
+{
+	string ans;
+	trackerdata td(tokens1[1],tokens1[2],tokens1[3]);         
+	// cout<<td.shash<<"::"<<td.csocket<<"::"<<td.cfpath<<endl;
+    if(trackertable.find(td.shash) == trackertable.end())
+    {
+    	ans="Data Recorded successfully in server for "+data;
+    	trackertable[td.shash].push_back(td);
+    }
+    else if(trackertable.find(td.shash) != trackertable.end())
+    {
+    	vector<trackerdata> temptd=trackertable[td.shash];
+    	int flag=0;
+    	for(int j=0;j<temptd.size();j++)
+    	{
+    		if(temptd[j].csocket == td.csocket)
+    		{
+    			flag=1;
+    			break;
+    		}
+    	}
+    	cout<<"flag : "<<flag<<endl;
+    	if(flag)
+    	{
+    		ans="Server already has these data :  "+data;
+    			
+    	}
+    	else{
+    		ans="Data Recorded successfully in server for "+data;
+    		trackertable[td.shash].push_back(td);
+    	}
+    }
+
+    return ans;
+}
+
 int main(int argc, char *argv[])
 {
     socketclass trackersocket1;
@@ -91,6 +143,7 @@ int main(int argc, char *argv[])
 	       	char buffer[1024] = {0}; 
 	        valread = read( new_socket , buffer, 1024); 
 	        printf("Server get Data from Client : %s\n",buffer );
+	        string clientreplymsg;
 	    	 
 	    	string data=string(buffer);
 	    	vector <string> tokens1;
@@ -101,35 +154,27 @@ int main(int argc, char *argv[])
             { 
                 tokens1.push_back(intermediate1); 
             } 
-            
-            // string shorthash=tokens1[0];
-            // string cleintsocket=tokens1[1];
-            // string cleintfilepath=tokens1[2];
-            // cout<<shorthash<<"::"<<cleintsocket<<"::"<<cleintfilepath<<endl;
 
-            trackerdata td(tokens1[0],tokens1[1],tokens1[2]);
-            
-        	//cout<<td.shash<<"::"<<td.csocket<<"::"<<td.cfpath<<endl;
-	        
-            trackertable[td.shash].push_back(td);
-
-            vector<trackerdata> vectortd=trackertable[td.shash];
-
-            for(int i=0;i<vectortd.size();i++)
+            if(tokens1[0]=="share")
             {
-            	cout<<vectortd[i].shash<<"++"<<vectortd[i].csocket<<"++"<<vectortd[i].cfpath<<"++"<<endl;
+            	cout<<"Server executing for SHARE command !!!"<<endl;
+            	clientreplymsg=executeshare(tokens1,data);
             }
-            
+            else if(tokens1[0]=="get")
+            {
+            	cout<<"Server executing for GET command !!!"<<endl;
+            }
+
+           
+            printeverything();
 	        
-	        string msg;
-	        cout<<"\nEnter msg to send : ";
-	        cin>>msg;
-	        char *serverreply = new char[msg.length() + 1];
-			strcpy(serverreply, msg.c_str());
+	        char *serverreply = new char[clientreplymsg.length() + 1];
+			strcpy(serverreply, clientreplymsg.c_str());
 			//cout<<"serverreply : "<<serverreply<<endl;
 	        send(new_socket , serverreply , strlen(serverreply) , 0 ); 
 	        
 	        printf("Reply message sent from server\n"); 
+
 	     }
     }
 
