@@ -7,15 +7,15 @@ class trackerdata
 {
     public:
 
+        string shash;
         string csocket;
         string cfpath;
-        string shash;
-
+       
         trackerdata()
         {
+            shash="";
             csocket="";
             cfpath="";
-            shash="";
         }
 
         trackerdata(string hash,string ipport,string path)
@@ -28,6 +28,41 @@ class trackerdata
 
 map<string,vector<trackerdata>> trackertable;
 
+int readseederlist(char *fpath)
+{
+    ifstream fp(fpath, ifstream::binary);
+    if(!fp) 
+    {
+        cout << "Cannot open seedlist file !!!"<<endl;
+        return 0;
+    }
+    
+    string linecontent;
+
+    cout<<"Contest of seedlist file : "<<endl;
+    while (getline(fp, linecontent))
+    {   
+        cout<<linecontent<<endl;
+        string data=string(linecontent);
+        vector <string> tokens1;
+        stringstream check2(data); 
+        string intermediate1;
+        while(getline(check2, intermediate1, ' '))
+        { 
+            tokens1.push_back(intermediate1); 
+        }
+        trackerdata td1(tokens1[0],tokens1[1],tokens1[2]); 
+        trackertable[td1.shash].push_back(td1);
+    }
+    return 1;
+}
+
+int writeseederlist(char *fpath, string data)
+{
+    ofstream myfile(fpath, std::ios_base::app);  
+    myfile<<data<<endl;
+    myfile.close();
+}
 
 void printeverything()
 {
@@ -36,28 +71,30 @@ void printeverything()
 		string hs=it.first;
 		cout<<"\nData for Hash value : "<<hs<<endl;
 		vector<trackerdata> temptd=it.second;
-    	for(int j=0;j<temptd.size();j++)
+    	for(unsigned int j=0;j<temptd.size();j++)
     	{
-    		cout<<temptd[j].csocket<<"***"<<temptd[j].cfpath<<endl;
+    		cout<<temptd[j].csocket<<" -----> "<<temptd[j].cfpath<<endl;
     	}
 	}
 }
 
-string executeshare(vector <string> tokens1,string data)
+string executeshare(vector <string> tokens1,string data,char *seederlistfp)
 {
 	string ans;
+    string seederlistdata=tokens1[1]+" "+tokens1[2]+" "+tokens1[3];
 	trackerdata td(tokens1[1],tokens1[2],tokens1[3]);         
 	// cout<<td.shash<<"::"<<td.csocket<<"::"<<td.cfpath<<endl;
     if(trackertable.find(td.shash) == trackertable.end())
     {
     	ans="Data Recorded successfully in server for "+data;
     	trackertable[td.shash].push_back(td);
+        writeseederlist(seederlistfp,seederlistdata);
     }
     else if(trackertable.find(td.shash) != trackertable.end())
     {
     	vector<trackerdata> temptd=trackertable[td.shash];
     	int flag=0;
-    	for(int j=0;j<temptd.size();j++)
+    	for(unsigned int j=0;j<temptd.size();j++)
     	{
     		if(temptd[j].csocket == td.csocket)
     		{
@@ -74,6 +111,7 @@ string executeshare(vector <string> tokens1,string data)
     	else{
     		ans="Data Recorded successfully in server for "+data;
     		trackertable[td.shash].push_back(td);
+            writeseederlist(seederlistfp,seederlistdata);
     	}
     }
 
@@ -91,11 +129,12 @@ int main(int argc, char *argv[])
     }
     else
     {
-
+        readseederlist(argv[3]);
+        printeverything();
         trackersocket1.setsocketdata(string(argv[1]));
         trackersocket2.setsocketdata(string(argv[2]));
-        string seederfile=string(argv[3]);
-        string logfile=string(argv[4]);
+        // string seederfile=string(argv[3]);
+        // string logfile=string(argv[4]);
 
     	int server_fd, new_socket, valread; 
 	    struct sockaddr_in address; 
@@ -158,7 +197,7 @@ int main(int argc, char *argv[])
             if(tokens1[0]=="share")
             {
             	cout<<"Server executing for SHARE command !!!"<<endl;
-            	clientreplymsg=executeshare(tokens1,data);
+            	clientreplymsg=executeshare(tokens1,data,argv[3]);
             }
             else if(tokens1[0]=="get")
             {
