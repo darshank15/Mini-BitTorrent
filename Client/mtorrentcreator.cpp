@@ -4,7 +4,7 @@
 
 char *filepath, *mtorrentpath;
 
-string calHashofchunk(char *schunk,int length1)
+string calHashofchunk(char *schunk,int length1,int shorthashflag)
 {
 
     unsigned char hash[SHA_DIGEST_LENGTH];
@@ -16,13 +16,24 @@ string calHashofchunk(char *schunk,int length1)
         sprintf((char*)&(buf[i*2]), "%02x", hash[i]);
 
     //cout<<"hash : "<<buf<<endl;
-
     string ans;
-    for(int i=0;i<20;i++)
+    if(shorthashflag==1)
     {
-    	ans += buf[i];
+        for(int i=0;i<20;i++)
+        {
+            ans += buf[i];
+        }
+    
+    }
+    else{
+
+        for(int i=0;i<SHA_DIGEST_LENGTH*2;i++)
+        {
+            ans += buf[i];
+        }
     }
     return ans;
+   
 }
 
 string getFileHash(char *fpath)
@@ -69,7 +80,7 @@ string getFileHash(char *fpath)
         file1.read(chunk_data,   /* address of buffer start */
                   cur_cnk_size); /* this many bytes is to be read */
 
-        string sh1out=calHashofchunk(chunk_data,cur_cnk_size);
+        string sh1out=calHashofchunk(chunk_data,cur_cnk_size,1);
         fileHash = fileHash + sh1out;
     }
 

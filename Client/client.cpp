@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
         string cmd=tokens[0];
         string fpath=tokens[1];
         string mtpath=tokens[2];
-
+        string complexdata;
         cout<<"Command  : "<<cmd<<endl;
         cout<<"File path : "<<fpath<<endl;
         cout<<"Mtorrent path : "<<mtpath<<endl;
@@ -67,9 +67,11 @@ int main(int argc, char const *argv[])
             cout<<"Long Hash : "<<filehash<<endl; //need to do hash of hash
             char *longhash = new char[filehash.length() + 1];
             strcpy(longhash, filehash.c_str());
-            string shorthash=calHashofchunk(longhash,filehash.length());
-            cout<<"shortHash : "<<shorthash<<endl;
+            string shorthash=calHashofchunk(longhash,filehash.length(),0);
+            //cout<<"ShortHash : "<<shorthash<<endl;
             
+            complexdata=shorthash+"#"+string(argv[2])+"#"+fpath;
+            cout<<"Complex Data need to send to tracker :"<<complexdata<<endl;
         }
 
         if(errorflag != 1)
@@ -105,11 +107,11 @@ int main(int argc, char const *argv[])
             while(1)
             {
 
-                string msg;
-                cout<<"\nEnter msg to send : ";
-                cin>>msg;
-                char *clientreply = new char[msg.length() + 1];
-                strcpy(clientreply, msg.c_str());
+                // string msg;
+                // cout<<"\nEnter msg to send : ";
+                // cin>>msg;
+                char *clientreply = new char[complexdata.length() + 1];
+                strcpy(clientreply, complexdata.c_str());
                 //cout<<"clientreply : "<<clientreply<<endl;
                 send(sock , clientreply , strlen(clientreply) , 0 ); 
                 

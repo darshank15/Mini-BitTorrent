@@ -12,6 +12,6 @@
 
 using namespace std;
 
-string calHashofchunk(char *schunk,int length1);
+string calHashofchunk(char *schunk,int length1,int shorthashflag);
 string getFileHash(char *fpath);
 string createTorrentFile(char *fpath, char *mtpath,string tcksocket1,string tcksocket2);

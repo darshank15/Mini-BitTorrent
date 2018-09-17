@@ -1,6 +1,5 @@
 #include "trackerheader.h"
 #include "../Client/socket.cpp"
-using namespace std;
 //#define PORT 7000 
 
 class trackerdata
@@ -92,9 +91,9 @@ int main(int argc, char *argv[])
 	        valread = read( new_socket , buffer, 1024); 
 	        printf("Server get Data from Client : %s\n",buffer );
 	    	 
-	    	string data=string(buffer);
+	    	string bufdata=string(buffer);
 	    	vector <string> tokens1;
-            stringstream check2(data); 
+            stringstream check2(bufdata); 
             string intermediate1;   
             // Tokenizing w.r.t. space '#' 
             while(getline(check2, intermediate1, '#'))
@@ -102,25 +101,19 @@ int main(int argc, char *argv[])
                 tokens1.push_back(intermediate1); 
             } 
             
+            trackerdata td(tokens1[0],tokens1[1],tokens1[2]);
             // string shorthash=tokens1[0];
             // string cleintsocket=tokens1[1];
             // string cleintfilepath=tokens1[2];
-            // cout<<shorthash<<"::"<<cleintsocket<<"::"<<cleintfilepath<<endl;
-
-            trackerdata td(tokens1[0],tokens1[1],tokens1[2]);
+            //cout<<shorthash<<"::"<<cleintsocket<<"::"<<cleintfilepath<<endl;
             
-        	//cout<<td.shash<<"::"<<td.csocket<<"::"<<td.cfpath<<endl;
+        	cout<<td.shash<<"::"<<td.csocket<<"::"<<td.cfpath<<endl;
 	        
             trackertable[td.shash].push_back(td);
 
             vector<trackerdata> vectortd=trackertable[td.shash];
+            cout<<vectortd[0].shash<<"++"<<vectortd[0].csocket<<"++"<<vectortd[0].cfpath<<"++"<<endl;
 
-            for(int i=0;i<vectortd.size();i++)
-            {
-            	cout<<vectortd[i].shash<<"++"<<vectortd[i].csocket<<"++"<<vectortd[i].cfpath<<"++"<<endl;
-            }
-            
-	        
 	        string msg;
 	        cout<<"\nEnter msg to send : ";
 	        cin>>msg;
