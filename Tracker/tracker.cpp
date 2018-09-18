@@ -74,14 +74,37 @@ void printeverything()
 	}
 }
 
+string executeget(vector <string> tokens1)
+{
+        string ans;
+        unsigned int flag=0;
+        string shash=tokens1[1];
+        if(trackertable.find(shash) != trackertable.end())
+        {
+            unsigned int i;
+            vector<trackerdata> temptd =trackertable[shash];
+            for(i=0;i<temptd.size()-1;i++)
+            {
+                ans=temptd[i].csocket+"#";
+            }
+            ans=temptd[i].csocket;
+        }
+        else
+        {
+            ans="No Client found for this File !!!";
+        }
+
+        return ans;
+}
+
 string executeremove(vector <string> tokens1,string data,char *seederlistfp)
 {
         string ans;
         int flag=0;
         string shash=tokens1[1];
-        cout<<"---------->shash : "<<shash<<endl;
+        //cout<<"---------->shash : "<<shash<<endl;
         string clsocket=tokens1[2];
-        cout<<"---------->csocket : "<<clsocket<<endl;
+        //cout<<"---------->csocket : "<<clsocket<<endl;
         if(trackertable.find(shash) != trackertable.end())
         {
            
@@ -91,20 +114,20 @@ string executeremove(vector <string> tokens1,string data,char *seederlistfp)
             {
                 if((*it).csocket==clsocket)
                 {
-                    temptd.erase(it);
                     flag=1;
-                    cout<<"---------->hit"<<endl;
+                    //cout<<"---------->hit"<<endl;
                     if(sizeofvector==1)
                     {
                         trackertable.erase(shash);
                         break;
                     }
                     else{
-                        trackertable[shash]=temptd; 
+                        temptd.erase(it);
                         break;
                     }
                 }
             }
+            trackertable[shash]=temptd; 
 
         }
         if(flag==1)
@@ -241,6 +264,7 @@ int main(int argc, char *argv[])
             else if(tokens1[0]=="get")
             {
             	cout<<"Server executing for GET command !!!"<<endl;
+                clientreplymsg=executeget(tokens1);
             }
             else if(tokens1[0]=="remove")
             {
