@@ -12,6 +12,12 @@
 
 using namespace std;
 
+//mtorrent generator's functions
 string calHashofchunk(char *schunk,int length1,int shorthashflag);
 string getFileHash(char *fpath);
 string createTorrentFile(char *fpath, char *mtpath,string tcksocket1,string tcksocket2);
+
+//Client Commands
+string executeshareclient(vector <string> tokens,string clntsckstr,string trcksck1str,string trcksck2str);
+string executegetclient(vector <string> tokens);
+string executeremoveclient(vector <string> tokens,string clntsckstr);

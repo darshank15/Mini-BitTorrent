@@ -3,10 +3,10 @@ CFLAGS = -Wall
 DEPS = trackerheader.h 
 OBJ = tracker.o
 %.o: %.cpp $(DEPS)
-	$(CC) $(CFLAGS) -c -o $@ $< 
+	$(CC) $(CFLAGS) -c -o $@ $< -lpthread
 
 tracker: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^ 
+	$(CC) $(CFLAGS) -o $@ $^ -lpthread
 
 clean:
 	rm -rf *o tracker

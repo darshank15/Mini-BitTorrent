@@ -5,6 +5,7 @@
 using namespace std;
 //#define PORT 7000 
 
+char *seederfilep;
 map<string,vector<trackerdata>> trackertable;
 
 int readseederlist(char *fpath)
@@ -77,7 +78,6 @@ void printeverything()
 string executeget(vector <string> tokens1)
 {
         string ans;
-        unsigned int flag=0;
         string shash=tokens1[1];
         if(trackertable.find(shash) != trackertable.end())
         {
@@ -180,10 +180,63 @@ string executeshare(vector <string> tokens1,string data,char *seederlistfp)
     return ans;
 }
 
+
+void *serverservice(void *socket_desc)
+{
+    int new_socket = *(int*)socket_desc;
+    while(1)
+    {
+        char buffer[1024] = {0}; 
+        int valread = read( new_socket , buffer, 1024); 
+        printf("Server get Data from Client : %s\n",buffer );
+        string clientreplymsg;
+         
+        string data=string(buffer);
+        vector <string> tokens1;
+        stringstream check2(data); 
+        string intermediate1;   
+        // Tokenizing w.r.t. space '#' 
+        while(getline(check2, intermediate1, '#'))
+        { 
+            tokens1.push_back(intermediate1); 
+        } 
+
+        if(tokens1[0]=="share")
+        {
+            cout<<"Server executing for SHARE command !!!"<<endl;
+            clientreplymsg=executeshare(tokens1,data,seederfilep);
+        }
+        else if(tokens1[0]=="get")
+        {
+            cout<<"Server executing for GET command !!!"<<endl;
+            clientreplymsg=executeget(tokens1);
+        }
+        else if(tokens1[0]=="remove")
+        {
+            cout<<"Server executing for GET command !!!"<<endl;
+            clientreplymsg=executeremove(tokens1,data,seederfilep);
+        }
+
+       
+        printeverything();
+        
+        //cout<<"serverreply : "<<string(serverreply)<<endl;
+        char *serverreply = new char[clientreplymsg.length() + 1];
+        strcpy(serverreply, clientreplymsg.c_str());
+        //cout<<"serverreply : "<<serverreply<<endl;
+        send(new_socket , serverreply , strlen(serverreply) , 0 ); 
+        
+        printf("Reply message sent from server\n"); 
+
+     }
+}
+
+
 int main(int argc, char *argv[])
 {
     socketclass trackersocket1;
     socketclass trackersocket2;
+    pthread_t thread_id;
 	if (argc != 5)
     {
         cout << "Invalid Argument !!!" << endl;
@@ -195,7 +248,7 @@ int main(int argc, char *argv[])
         printeverything();
         trackersocket1.setsocketdata(string(argv[1]));
         trackersocket2.setsocketdata(string(argv[2]));
-        // string seederfile=string(argv[3]);
+        seederfilep=argv[3];
         // string logfile=string(argv[4]);
 
     	int server_fd, new_socket, valread; 
@@ -228,62 +281,38 @@ int main(int argc, char *argv[])
 	        perror("bind failed"); 
 	        exit(EXIT_FAILURE); 
 	    } 
-	    if (listen(server_fd, 3) < 0) 
+	    if (listen(server_fd, 10) < 0) 
 	    { 
 	        perror("listen"); 
 	        exit(EXIT_FAILURE); 
 	    } 
-	    if ((new_socket = accept(server_fd, (struct sockaddr *)&address,  
-	                       (socklen_t*)&addrlen))<0) 
-	    { 
-	        perror("accept"); 
-	        exit(EXIT_FAILURE); 
-	    } 
-	    while(1)
-	    {
-	       	char buffer[1024] = {0}; 
-	        valread = read( new_socket , buffer, 1024); 
-	        printf("Server get Data from Client : %s\n",buffer );
-	        string clientreplymsg;
-	    	 
-	    	string data=string(buffer);
-	    	vector <string> tokens1;
-            stringstream check2(data); 
-            string intermediate1;   
-            // Tokenizing w.r.t. space '#' 
-            while(getline(check2, intermediate1, '#'))
-            { 
-                tokens1.push_back(intermediate1); 
-            } 
 
-            if(tokens1[0]=="share")
-            {
-            	cout<<"Server executing for SHARE command !!!"<<endl;
-            	clientreplymsg=executeshare(tokens1,data,argv[3]);
-            }
-            else if(tokens1[0]=="get")
-            {
-            	cout<<"Server executing for GET command !!!"<<endl;
-                clientreplymsg=executeget(tokens1);
-            }
-            else if(tokens1[0]=="remove")
-            {
-                cout<<"Server executing for GET command !!!"<<endl;
-                clientreplymsg=executeremove(tokens1,data,argv[3]);
-            }
 
-           
-            printeverything();
-	        
-            //cout<<"serverreply : "<<string(serverreply)<<endl;
-	        char *serverreply = new char[clientreplymsg.length() + 1];
-			strcpy(serverreply, clientreplymsg.c_str());
-			//cout<<"serverreply : "<<serverreply<<endl;
-	        send(new_socket , serverreply , strlen(serverreply) , 0 ); 
-	        
-	        printf("Reply message sent from server\n"); 
+        while(1)
+        {
+                if((new_socket = accept(server_fd, (struct sockaddr *)&address,(socklen_t*)&addrlen))<0) 
+                { 
+                    perror("Error in accept connection"); 
+                    exit(EXIT_FAILURE); 
+                }
 
-	     }
+                cout<<"******Connection accepted in server side*******"<<endl;
+                if( pthread_create( &thread_id , NULL ,  serverservice , (void*)&new_socket) < 0)
+                {
+                    perror("\ncould not create thread\n");
+                }
+                 
+                //Now join the thread , so that we dont terminate before the thread
+                //pthread_join( thread_id , NULL);
+                cout<<"New Client created assigned"<<endl;
+                 
+                if (new_socket < 0)
+                {
+                    perror("accept failed");
+                    //return 1;
+                }
+        }
+
     }
 
 }
