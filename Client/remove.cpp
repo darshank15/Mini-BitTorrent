@@ -4,13 +4,12 @@ string executeremoveclient(vector <string> tokens,string clntsckstr)
 {
     string cmd=tokens[0];
     string mtpath=tokens[1];
-    //cout<<"mpath :"<<mtpath<<endl;
     char *tp = new char[mtpath.length() + 1];
     strcpy(tp, mtpath.c_str());
     ifstream fileptr(mtpath, ifstream::binary);
     if (!fileptr)
     {
-        cout << "Mtorrent not exist : " << string(mtpath) << endl;
+        cout << "Mtorrent not exist (REMOVE): " << string(mtpath) << endl;
         return "-1";
     }
     int count=4;
@@ -29,7 +28,8 @@ string executeremoveclient(vector <string> tokens,string clntsckstr)
     string shorthash=calHashofchunk(longhash,mtorrenthash.length(),0);
 
     string ans=cmd+"#"+shorthash+"#"+clntsckstr;
-    cout<<"Complex Data need to send to tracker from Remove cmd :"<<ans<<endl;
+    cout<<"(REMOVE)Complex Data need to send to tracker :"<<ans<<endl;
+    filehashmap.erase(shorthash);
     return ans;
 
 }

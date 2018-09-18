@@ -9,7 +9,7 @@ string executegetclient(vector <string> tokens)
     ifstream fileptr(mtpath, ifstream::binary);
     if (!fileptr)
     {
-        cout << "Mtorrent not exist : " << string(mtpath) << endl;
+        cout << "Mtorrent not exist : (GET)" << string(mtpath) << endl;
         return "-1";
     }
     int count=4;
@@ -28,6 +28,6 @@ string executegetclient(vector <string> tokens)
     string shorthash=calHashofchunk(longhash,mtorrenthash.length(),0);
 
     string ans=cmd+"#"+shorthash;
-    cout<<"Complex Data need to send to tracker from Remove cmd :"<<ans<<endl;
+    cout<<"(GET cmd)Complex Data need to send to tracker :"<<ans<<endl;
     return ans;
 }

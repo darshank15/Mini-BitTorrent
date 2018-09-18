@@ -12,6 +12,8 @@
 #include <pthread.h>
 using namespace std;
 
+extern map<string,string> filehashmap; 
+
 //mtorrent generator's functions
 string calHashofchunk(char *schunk,int length1,int shorthashflag);
 string getFileHash(char *fpath);
