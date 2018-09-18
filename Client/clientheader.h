@@ -9,7 +9,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <openssl/sha.h>
-
+#include <pthread.h>
 using namespace std;
 
 //mtorrent generator's functions
@@ -21,3 +21,5 @@ string createTorrentFile(char *fpath, char *mtpath,string tcksocket1,string tcks
 string executeshareclient(vector <string> tokens,string clntsckstr,string trcksck1str,string trcksck2str);
 string executegetclient(vector <string> tokens);
 string executeremoveclient(vector <string> tokens,string clntsckstr);
+
+void *seederserverservice(void *socket_desc);

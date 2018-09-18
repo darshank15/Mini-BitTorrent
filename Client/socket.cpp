@@ -9,7 +9,7 @@ class socketclass
 
         socketclass()
         {
-            ip="";
+            // ip="";
             port=0;
         }
 

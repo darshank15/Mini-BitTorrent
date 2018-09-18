@@ -42,6 +42,7 @@ int writeseederlist(char *fpath, string data)
     ofstream myfile(fpath, std::ios_base::app | std::ios_base::out);  
     myfile<<data<<endl;
     myfile.close();
+    return 1;
 }
 
 void updateseederlist(char *seederlistfp)
@@ -190,7 +191,7 @@ void *serverservice(void *socket_desc)
     while(1)
     {
         char buffer[1024] = {0}; 
-        int valread = read( new_socket , buffer, 1024); 
+        read( new_socket , buffer, 1024); 
         printf("Server get Data from Client : %s\n",buffer );
         string clientreplymsg;
          
@@ -247,6 +248,7 @@ int main(int argc, char *argv[])
     }
     else
     {
+        cout<<"Argument"<<endl;
         readseederlist(argv[3]);
         printeverything();
         trackersocket1.setsocketdata(string(argv[1]));
@@ -254,7 +256,7 @@ int main(int argc, char *argv[])
         seederfilep=argv[3];
         // string logfile=string(argv[4]);
 
-    	int server_fd, new_socket, valread; 
+    	int server_fd, new_socket; 
 	    struct sockaddr_in address; 
 	    int opt = 1; 
 	    int addrlen = sizeof(address); 

@@ -3,6 +3,7 @@
 
 // #define PORT 7000 
 
+
 int main(int argc, char const *argv[]) 
 { 
     socketclass clientsocket;
@@ -27,8 +28,15 @@ int main(int argc, char const *argv[])
         cout<<"Tracker 1 socket: "<<trackersocket1.ip<<" : "<<trackersocket1.port<<endl;
         cout<<"Tracker 2 socket: "<<trackersocket2.ip<<" : "<<trackersocket2.port<<endl;
 
+        pthread_t cserverid;
+        if( pthread_create(&cserverid , NULL ,  seederserverservice , (void*)&clientsocketstr) < 0)
+        {
+            perror("\ncould not create thread\n");
+        }
+                 
+
         //struct sockaddr_in address; 
-        int sock = 0, valread; 
+        int sock = 0; 
         struct sockaddr_in serv_addr;
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
         { 
@@ -116,7 +124,7 @@ int main(int argc, char const *argv[])
                     printf("client msg message sent\n"); 
                     
                     char buffer[1024] = {0}; 
-                    valread = read( sock , buffer, 1024); 
+                    read( sock , buffer, 1024); 
                     printf("client got reply from server: %s\n",buffer );
 
 
