@@ -59,9 +59,26 @@ int readseederlist(char *fpath)
 
 int writeseederlist(char *fpath, string data)
 {
-    ofstream myfile(fpath, std::ios_base::app);  
+    ofstream myfile(fpath, std::ios_base::app | std::ios_base::out);  
     myfile<<data<<endl;
     myfile.close();
+}
+
+void updateseederlist(char *seederlistfp)
+{
+    ofstream filep;
+    filep.open(seederlistfp,ios::out);
+    for(auto it : trackertable)
+    {
+        string hs=it.first;
+        vector<trackerdata> temptd=it.second;
+        for(unsigned int j=0;j<temptd.size();j++)
+        {
+            string seederlistdata=temptd[j].shash+" "+temptd[j].csocket+" "+temptd[j].cfpath;
+            filep<<seederlistdata<<endl;
+        }
+    }
+    filep.close();
 }
 
 void printeverything()
@@ -76,6 +93,48 @@ void printeverything()
     		cout<<temptd[j].csocket<<" -----> "<<temptd[j].cfpath<<endl;
     	}
 	}
+}
+
+string executeremove(vector <string> tokens1,string data,char *seederlistfp)
+{
+        string ans;
+        int flag=0;
+        string shash=tokens1[1];
+        //cout<<"---------->shash : "<<shash<<endl;
+        string clsocket=tokens1[2];
+        //cout<<"---------->csocket : "<<clsocket<<endl;
+        if(trackertable.find(shash) != trackertable.end())
+        {
+           
+            vector<trackerdata> temptd =trackertable[shash];
+            int sizeofvector=temptd.size();
+            for(auto it=temptd.begin();it!=temptd.end();it++)
+            {
+                if((*it).csocket==clsocket)
+                {
+                    temptd.erase(it);
+                    flag=1;
+                    if(sizeofvector==1)
+                    {
+                        trackertable.erase (shash);
+                        break;
+                    }
+                    else{
+                        trackertable[shash]=temptd; 
+                        break;
+                    }
+                }
+            }
+
+        }
+        if(flag==1)
+        {
+            updateseederlist(seederlistfp);
+            return "Record removed successfully !!!";
+        }
+        else{
+            return "Record doesn't found in database !!!";
+        }
 }
 
 string executeshare(vector <string> tokens1,string data,char *seederlistfp)
@@ -203,10 +262,16 @@ int main(int argc, char *argv[])
             {
             	cout<<"Server executing for GET command !!!"<<endl;
             }
+            else if(tokens1[0]=="remove")
+            {
+                cout<<"Server executing for GET command !!!"<<endl;
+                clientreplymsg=executeremove(tokens1,data,argv[3]);
+            }
 
            
             printeverything();
 	        
+            //cout<<"serverreply : "<<string(serverreply)<<endl;
 	        char *serverreply = new char[clientreplymsg.length() + 1];
 			strcpy(serverreply, clientreplymsg.c_str());
 			//cout<<"serverreply : "<<serverreply<<endl;

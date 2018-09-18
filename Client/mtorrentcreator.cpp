@@ -4,6 +4,8 @@
 
 char *filepath, *mtorrentpath;
 
+//shorthashflag = 1 means return 20 character of hash
+//shorthashflag = 0 means return all 40 character of hash
 string calHashofchunk(char *schunk,int length1,int shorthashflag)
 {
 
