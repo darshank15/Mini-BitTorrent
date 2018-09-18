@@ -1,30 +1,9 @@
 #include "trackerheader.h"
 #include "../Client/socket.cpp"
+#include "trackerdata.cpp"
+
 using namespace std;
 //#define PORT 7000 
-
-class trackerdata
-{
-    public:
-
-        string shash;
-        string csocket;
-        string cfpath;
-       
-        trackerdata()
-        {
-            shash="";
-            csocket="";
-            cfpath="";
-        }
-
-        trackerdata(string hash,string ipport,string path)
-        {
-        	shash=hash;
-        	csocket=ipport;
-        	cfpath=path;
-        }
-};
 
 map<string,vector<trackerdata>> trackertable;
 
@@ -100,9 +79,9 @@ string executeremove(vector <string> tokens1,string data,char *seederlistfp)
         string ans;
         int flag=0;
         string shash=tokens1[1];
-        //cout<<"---------->shash : "<<shash<<endl;
+        cout<<"---------->shash : "<<shash<<endl;
         string clsocket=tokens1[2];
-        //cout<<"---------->csocket : "<<clsocket<<endl;
+        cout<<"---------->csocket : "<<clsocket<<endl;
         if(trackertable.find(shash) != trackertable.end())
         {
            
@@ -114,9 +93,10 @@ string executeremove(vector <string> tokens1,string data,char *seederlistfp)
                 {
                     temptd.erase(it);
                     flag=1;
+                    cout<<"---------->hit"<<endl;
                     if(sizeofvector==1)
                     {
-                        trackertable.erase (shash);
+                        trackertable.erase(shash);
                         break;
                     }
                     else{
