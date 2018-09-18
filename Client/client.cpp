@@ -27,7 +27,6 @@ int main(int argc, char const *argv[])
         cout<<"Tracker 1 socket: "<<trackersocket1.ip<<" : "<<trackersocket1.port<<endl;
         cout<<"Tracker 2 socket: "<<trackersocket2.ip<<" : "<<trackersocket2.port<<endl;
 
-
         //struct sockaddr_in address; 
         int sock = 0, valread; 
         struct sockaddr_in serv_addr;
@@ -61,6 +60,7 @@ int main(int argc, char const *argv[])
         {
 
             string strcmd;
+            char *mtorrentfilepath;
             cout<<"Enter the command : "<<endl;
             getline(cin >> ws, strcmd);
 
@@ -94,6 +94,8 @@ int main(int argc, char const *argv[])
             }
             else if(tokens[0]=="remove")
             {
+                mtorrentfilepath = new char[tokens[1].length() + 1];
+                strcpy(mtorrentfilepath, tokens[1].c_str());
                 cout<<"REMOVE command exe in client side"<<endl;
                 complexdata=executeremoveclient(tokens,clientsocketstr);
                 if(complexdata=="-1")
@@ -115,7 +117,15 @@ int main(int argc, char const *argv[])
                     
                     char buffer[1024] = {0}; 
                     valread = read( sock , buffer, 1024); 
-                    printf("client got reply from server: %s\n",buffer ); 
+                    printf("client got reply from server: %s\n",buffer );
+
+
+                    string responce=string(buffer);
+                    if(responce=="Record removed successfully !!!")
+                    {
+                         if(remove(mtorrentfilepath) != 0 )
+                            perror( "\nError deleting mtorrent file\n");
+                    }
                 // }
 
         }

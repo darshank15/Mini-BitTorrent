@@ -85,9 +85,12 @@ string executeget(vector <string> tokens1)
             vector<trackerdata> temptd =trackertable[shash];
             for(i=0;i<temptd.size()-1;i++)
             {
-                ans=temptd[i].csocket+"#";
+                ans += temptd[i].csocket+"#";
             }
-            ans=temptd[i].csocket;
+            //cout<<"--->"<<ans<<endl;
+            ans += temptd[i].csocket;
+
+            //cout<<"--->"<<ans<<endl;
         }
         else
         {

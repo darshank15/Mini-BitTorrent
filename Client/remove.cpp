@@ -30,10 +30,6 @@ string executeremoveclient(vector <string> tokens,string clntsckstr)
 
     string ans=cmd+"#"+shorthash+"#"+clntsckstr;
     cout<<"Complex Data need to send to tracker from Remove cmd :"<<ans<<endl;
-     if(remove(tp) != 0 )
-        perror( "\nError deleting mtorrent file\n");
-    else
-        cout<<"mtorrent File successfully deleted"<<endl;
     return ans;
 
 }
