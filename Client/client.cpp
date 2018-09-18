@@ -1,8 +1,10 @@
 #include "clientheader.h"
 #include "socket.cpp"
 
+#define CSIZE 150*1024
+
 // #define PORT 7000 
-int dofiletransfering(string replydata,string filehash)
+int dofiletransfering(string replydata,string filehash,string destpath)
 {
     cout<<"\ndofiletransfering called : "<<replydata<<endl;
     vector <string> tokens; 
@@ -44,15 +46,24 @@ int dofiletransfering(string replydata,string filehash)
         }
         cout<<"******Connection  established for file transffered successfully !!!"<<endl;
 
+        char *d_path = new char[destpath.length() + 1];
+        strcpy(d_path, destpath.c_str());
+        ofstream myfile;
+        myfile.open(string(d_path));
+
         char *clientreply = new char[filehash.length() + 1];
         strcpy(clientreply, filehash.c_str());
-
-        send(sock , clientreply , strlen(clientreply) , 0 ); 
-        
-        char buffer[1024] = {0}; 
-        read( sock , buffer, 1024);
-
-        printf("client(file transffered) got reply from server: %s\n",buffer );
+        send(sock , clientreply , strlen(clientreply) , 0 );
+        int n;
+        do{
+             char buffer[CSIZE] = {0}; 
+             n=read( sock , buffer, CSIZE);
+             string temp=string(buffer);
+             //printf("client(file transffered) got reply from server: %s\n",buffer );
+             myfile<<temp;
+        }while(n>0);
+       
+        myfile.close();
 
         return 1;
 }
@@ -119,7 +130,7 @@ int main(int argc, char const *argv[])
         while(1)
         {
 
-            string strcmd,filehash;
+            string strcmd,filehash,destpath;
             int getflag=0;
             char *mtorrentfilepath;
             cout<<"Enter the command : "<<endl;
@@ -162,6 +173,7 @@ int main(int argc, char const *argv[])
                 cout<<"GET command exe in client side"<<endl;
                 complexdata=executegetclient(tokens);
                 filehash=complexdata.substr(complexdata.find("#") + 1);
+                destpath=tokens[2];
                 if(complexdata=="-1")
                     continue;
                 else{
@@ -201,7 +213,7 @@ int main(int argc, char const *argv[])
 
             if(getflag==1)
             {
-                dofiletransfering(responce,filehash);
+                dofiletransfering(responce,filehash,destpath);
             }
 
             getflag=0;
