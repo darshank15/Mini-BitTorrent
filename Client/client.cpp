@@ -1,9 +1,11 @@
 #include "clientheader.h"
 #include "socket.cpp"
 
-#define CSIZE 15
+#define CSIZE 512*1024
 
 const char *logpath;
+vector<string> listdownload;
+
 int dofiletransfering(string replydata,string filehash,string destpath)
 {
     writelog("dofiletransfering called : "+replydata);
@@ -14,8 +16,12 @@ int dofiletransfering(string replydata,string filehash,string destpath)
     { 
         tokens.push_back(intermediate); 
     }
-    // cout<<"Client ip : "<<tokens[0]<<endl;
-    // cout<<"port : "<<tokens[1];
+    writelog("******Avialable seeders for downloading file*******");
+    for(unsigned int i=0;i<tokens.size();i++)
+    {
+        writelog(tokens[i]);
+    }
+    writelog("****************************************************");
     socketclass csocket;
     csocket.setsocketdata(tokens[0]);
 
@@ -60,7 +66,7 @@ int dofiletransfering(string replydata,string filehash,string destpath)
 
             char *buffer = new char[CSIZE];
             n=read( sock , buffer, CSIZE);
-            myfile.write(buffer,CSIZE);
+            myfile.write(buffer,n);
 
         }while(n>0);
        
@@ -161,7 +167,7 @@ int main(int argc, char const *argv[])
             {
                 if(tokens.size()!=3)
                 {
-                    cout<<"Invalid argument for SHARE Command"<<endl;
+                    cout<<"INVALID_ARGUMENTS --- SHARE Command"<<endl;
                     continue;
                 }
                 writelog("SHARE command exe in client side");
@@ -175,7 +181,7 @@ int main(int argc, char const *argv[])
             {
                 if(tokens.size()!=3)
                 {
-                    cout<<"Invalid argument for GET Command"<<endl;
+                    cout<<"INVALID_ARGUMENTS --- GET Command"<<endl;
                     continue;
                 }
                 writelog("GET command exe in client side");
@@ -193,7 +199,7 @@ int main(int argc, char const *argv[])
             {
                 if(tokens.size()!=2)
                 {
-                    cout<<"Invalid argument for REMOVE Command"<<endl;
+                    cout<<"INVALID_ARGUMENTS --- REMOVE Command"<<endl;
                     continue;
                 }
                 mtorrentfilepath = new char[tokens[1].length() + 1];
@@ -203,8 +209,24 @@ int main(int argc, char const *argv[])
                 if(complexdata=="-1")
                     continue;        
             }
+            else if(tokens[0]=="show_downloads")
+            {
+                if(listdownload.size()<=0)
+                {
+                    cout<<"NO DOWNLOADS TILL NOW"<<endl;
+                }
+                else
+                {
+                     cout<<"********* DOWNLOADS **********"<<endl;
+                    for(unsigned int i=0;i<listdownload.size();i++)
+                    {
+                        cout<<listdownload[i]<<endl;
+                    }
+                } 
+                continue;
+            }
             else{
-                cout<<"Invalid Command"<<endl;
+                cout<<"INVALID COMMAND"<<endl;
                 continue;
             }
 
@@ -218,13 +240,23 @@ int main(int argc, char const *argv[])
             char buffer[1024] = {0}; 
             read( sock , buffer, 1024); 
             writelog("client("+clientsocketstr+")got reply from tracker ===> "+string(buffer));
-            cout<<string(buffer)<<endl;
+            cout<<"Server Reply ===> "<<string(buffer)<<endl;
 
             string responce=string(buffer);
 
             if(getflag==1)
             {
-                dofiletransfering(responce,filehash,destpath);
+                int ans=dofiletransfering(responce,filehash,destpath);
+                if(ans==1)
+                {
+                    cout<<"FILE SUCCESSFULLY DOWNLOADED"<<endl;
+                    listdownload.push_back(destpath);
+                }
+                else
+                {
+                    cout<<"ERROR IN DOWNLOADING FILE"<<endl;
+                }
+
             }
 
             getflag=0;

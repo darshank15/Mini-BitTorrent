@@ -1,7 +1,7 @@
 #include "clientheader.h"
 #include "socket.cpp"
 
-#define CSIZE 15
+#define CSIZE 512*1024
 
 void *seederservice(void *socket_desc)
 {
@@ -54,7 +54,7 @@ void *seederservice(void *socket_desc)
             char *chunk_data = new char[cur_cnk_size];
             file1.read(chunk_data,   /* address of buffer start */
                       cur_cnk_size); /* this many bytes is to be read */
-            
+     
             send(new_socket , chunk_data , cur_cnk_size , 0 ); 
         }
 

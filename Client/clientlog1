@@ -1,0 +1,14 @@
+********new client started *********
+Client socket : 127.0.0.1:8880
+Tracker 1 socket : 127.0.0.1:9090
+Tracker 2 socket : 123.98.78.10:1000
+******Connection stablished successfully with tracker!!!
+SHARE command exe in client side
+Mtorrent creater called for filepath : ../OS_Assignment_2.pdf
+Mtorrent Succesfully created
+share cmd gets Long Hash : cab7480910b2fdaca8b9
+(SHARE cmd)Complex Data need to send to tracker :share#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8880#../OS_Assignment_2.pdf
+client msg message sent to Tracker
+client(127.0.0.1:8880)got reply from tracker ===> Data Recorded successfully in server for share#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8880#../OS_Assignment_2.pdf
+******Connection accepted in seeder *******
+Seeder gets Data from Clients : cda7e8fa971867d3dd9f276588250199fa06453d
