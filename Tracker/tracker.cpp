@@ -3,10 +3,18 @@
 #include "trackerdata.cpp"
 
 using namespace std;
+const char* trackerlogpath;
 //#define PORT 7000 
 
 char *seederfilep;
 map<string,vector<trackerdata>> trackertable;
+
+void writelog(string str)
+{
+    ofstream myfile(trackerlogpath, std::ios_base::app | std::ios_base::out);  
+    myfile<<str<<endl;
+    myfile.close();
+}
 
 int readseederlist(char *fpath)
 {
@@ -19,10 +27,9 @@ int readseederlist(char *fpath)
     
     string linecontent;
 
-    cout<<"Contest of seedlist file : "<<endl;
+    writelog("Contest of seedlist file : ");
     while (getline(fp, linecontent))
     {   
-        cout<<linecontent<<endl;
         string data=string(linecontent);
         vector <string> tokens1;
         stringstream check2(data); 
@@ -47,8 +54,8 @@ int writeseederlist(char *fpath, string data)
 
 void updateseederlist(char *seederlistfp)
 {
-    ofstream filep;
-    filep.open(seederlistfp,ios::out);
+    ofstream filep(seederlistfp,std::ios_base::out);  
+
     for(auto it : trackertable)
     {
         string hs=it.first;
@@ -56,6 +63,7 @@ void updateseederlist(char *seederlistfp)
         for(unsigned int j=0;j<temptd.size();j++)
         {
             string seederlistdata=temptd[j].shash+" "+temptd[j].csocket+" "+temptd[j].cfpath;
+            //cout<<seederlistdata<<endl;
             filep<<seederlistdata<<endl;
         }
     }
@@ -64,16 +72,18 @@ void updateseederlist(char *seederlistfp)
 
 void printeverything()
 {
+    writelog("****************seederlist Data**************");
 	for(auto it : trackertable)
 	{
 		string hs=it.first;
-		cout<<"\nData for Hash value : "<<hs<<endl;
+		writelog("Data for Hash value : "+hs);
 		vector<trackerdata> temptd=it.second;
     	for(unsigned int j=0;j<temptd.size();j++)
     	{
-    		cout<<temptd[j].csocket<<" -----> "<<temptd[j].cfpath<<endl;
+    		writelog(temptd[j].csocket + " -----> " + temptd[j].cfpath);
     	}
 	}
+    writelog("**********************************************");
 }
 
 string executeget(vector <string> tokens1)
@@ -105,35 +115,42 @@ string executeremove(vector <string> tokens1,string data,char *seederlistfp)
 {
         string ans;
         int flag=0;
+        int cflag=0;
         string shash=tokens1[1];
         //cout<<"---------->shash : "<<shash<<endl;
         string clsocket=tokens1[2];
         //cout<<"---------->csocket : "<<clsocket<<endl;
         if(trackertable.find(shash) != trackertable.end())
         {
-           
+            vector<trackerdata>::iterator it;
             vector<trackerdata> temptd =trackertable[shash];
             int sizeofvector=temptd.size();
-            for(auto it=temptd.begin();it!=temptd.end();it++)
+            for(it=temptd.begin();it!=temptd.end();it++)
             {
                 if((*it).csocket==clsocket)
                 {
                     flag=1;
-                    //cout<<"---------->hit"<<endl;
+                    // cout<<"---------->hit"<<endl;
                     if(sizeofvector==1)
                     {
+                        // cout<<"---------->single entry erase"<<endl;
                         trackertable.erase(shash);
                         break;
                     }
                     else{
-                        temptd.erase(it);
+
+                        cflag=1;
                         break;
                     }
                 }
             }
-            trackertable[shash]=temptd; 
-
+            if(cflag==1)
+            {
+                 temptd.erase(it);
+                 trackertable[shash]=temptd; 
+            }      
         }
+    
         if(flag==1)
         {
             updateseederlist(seederlistfp);
@@ -168,7 +185,6 @@ string executeshare(vector <string> tokens1,string data,char *seederlistfp)
     			break;
     		}
     	}
-    	cout<<"flag : "<<flag<<endl;
     	if(flag)
     	{
     		ans="Server already has these data :  "+data;
@@ -192,7 +208,7 @@ void *serverservice(void *socket_desc)
     {
         char buffer[1024] = {0}; 
         read( new_socket , buffer, 1024); 
-        printf("Server get Data from Client : %s\n",buffer );
+        writelog("Tracker get Data from Client : "+string(buffer));
         string clientreplymsg;
          
         string data=string(buffer);
@@ -207,17 +223,17 @@ void *serverservice(void *socket_desc)
 
         if(tokens1[0]=="share")
         {
-            cout<<"Server executing for SHARE command !!!"<<endl;
+            writelog("Tracker executing for SHARE command !!!");
             clientreplymsg=executeshare(tokens1,data,seederfilep);
         }
         else if(tokens1[0]=="get")
         {
-            cout<<"Server executing for GET command !!!"<<endl;
+            writelog("Tracker executing for GET command !!!");
             clientreplymsg=executeget(tokens1);
         }
         else if(tokens1[0]=="remove")
         {
-            cout<<"Server executing for GET command !!!"<<endl;
+            writelog("Tracker executing for REMOVE command !!!");
             clientreplymsg=executeremove(tokens1,data,seederfilep);
         }
 
@@ -230,7 +246,7 @@ void *serverservice(void *socket_desc)
         //cout<<"serverreply : "<<serverreply<<endl;
         send(new_socket , serverreply , strlen(serverreply) , 0 ); 
         
-        printf("Reply message sent from server\n"); 
+        writelog("Reply message sent from Tracker to client"); 
 
      }
 }
@@ -248,13 +264,15 @@ int main(int argc, char *argv[])
     }
     else
     {
-        cout<<"Argument"<<endl;
         readseederlist(argv[3]);
+        writelog("----------Initially Data in seederfile ------------");
         printeverything();
         trackersocket1.setsocketdata(string(argv[1]));
         trackersocket2.setsocketdata(string(argv[2]));
         seederfilep=argv[3];
-        // string logfile=string(argv[4]);
+        trackerlogpath=argv[4];
+        ofstream myfile(trackerlogpath,std::ios_base::out);  
+        myfile.close();
 
     	int server_fd, new_socket; 
 	    struct sockaddr_in address; 
@@ -301,7 +319,7 @@ int main(int argc, char *argv[])
                     exit(EXIT_FAILURE); 
                 }
 
-                cout<<"******Connection accepted in server side*******"<<endl;
+                writelog("******Connection accepted in tracker side*******");
                 if( pthread_create( &thread_id , NULL ,  serverservice , (void*)&new_socket) < 0)
                 {
                     perror("\ncould not create thread\n");
@@ -309,7 +327,7 @@ int main(int argc, char *argv[])
                  
                 //Now join the thread , so that we dont terminate before the thread
                 //pthread_join( thread_id , NULL);
-                cout<<"New Client created assigned"<<endl;
+                // cout<<"New Client created assigned"<<endl;
                  
                 if (new_socket < 0)
                 {

@@ -28,6 +28,6 @@ string executegetclient(vector <string> tokens)
     string shorthash=calHashofchunk(longhash,mtorrenthash.length(),0);
 
     string ans=cmd+"#"+shorthash;
-    cout<<"(GET cmd)Complex Data need to send to tracker :"<<ans<<endl;
+    writelog("(GET cmd)Complex Data need to send to tracker :"+ans);
     return ans;
 }

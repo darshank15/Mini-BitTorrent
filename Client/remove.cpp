@@ -28,7 +28,7 @@ string executeremoveclient(vector <string> tokens,string clntsckstr)
     string shorthash=calHashofchunk(longhash,mtorrenthash.length(),0);
 
     string ans=cmd+"#"+shorthash+"#"+clntsckstr;
-    cout<<"(REMOVE)Complex Data need to send to tracker :"<<ans<<endl;
+    writelog("(REMOVE)Complex Data need to send to tracker :"+ans);
     filehashmap.erase(shorthash);
     return ans;
 

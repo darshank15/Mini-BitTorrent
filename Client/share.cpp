@@ -22,13 +22,13 @@ string executeshareclient(vector <string> tokens,string clntsckstr,string trcksc
         cout<<"\nError Encounter for creating hash of file in sharing: "<<fpath<<endl;
         return "-1";
     }
-    cout<<"Long Hash : "<<filehash<<endl; //need to do hash of hash
+    writelog("share cmd gets Long Hash : "+filehash); //need to do hash of hash
     char *longhash = new char[filehash.length() + 1];
     strcpy(longhash, filehash.c_str());
     string shorthash=calHashofchunk(longhash,filehash.length(),0);
     
     string ans=cmd+"#"+shorthash+"#"+clntsckstr+"#"+fpath;
-    cout<<"(SHARE cmd)Complex Data need to send to tracker :"<<ans<<endl;
+    writelog("(SHARE cmd)Complex Data need to send to tracker :"+ans);
 
     filehashmap.emplace(shorthash,fpath);
     return ans;

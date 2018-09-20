@@ -91,7 +91,7 @@ string getFileHash(char *fpath)
 
 string createTorrentFile(char *fpath, char *mtpath,string tcksocket1,string tcksocket2)
 {
-    cout<<"\nMtorrent creater called for filepath"<<string(fpath)<<endl;
+    writelog("Mtorrent creater called for filepath : "+string(fpath));
     struct stat sb;
     if (stat(fpath, &sb) == -1)
     {
@@ -107,23 +107,6 @@ string createTorrentFile(char *fpath, char *mtpath,string tcksocket1,string tcks
     string flhash=getFileHash(fpath);
     myfile << flhash << endl;
     myfile.close();
-    cout<<"\nMtorrent Succesfully created : "<<endl;
+    writelog("Mtorrent Succesfully created");
     return flhash;
 }
-
-// int main(int argc, char *argv[])
-// {
-
-//     if (argc == 3)
-//     {
-//         filepath = argv[1];
-//         mtorrentpath = argv[2];
-//         createTorrentFile(filepath, mtorrentpath);
-//     }
-//     else
-//     {
-//         cout << "Invalid Argument !!!" << endl;
-//     }
-
-//     return 0;
-// }

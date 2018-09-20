@@ -8,7 +8,7 @@ void *seederservice(void *socket_desc)
 	int new_socket = *(int*)socket_desc;
 	char buffer[1024] = {0}; 
     read( new_socket , buffer, 1024); 
-    printf("Seeder gets Data from Clients : %s\n",buffer );
+    writelog("Seeder gets Data from Clients : "+string(buffer));
     string short_hash=string(buffer);
     string file_path=filehashmap[short_hash];
 
@@ -114,7 +114,7 @@ void *seederserverservice(void *socket_desc)
                     perror("Error in accept connection in seeder"); 
                     exit(EXIT_FAILURE); 
                 }
-                cout<<"******Connection accepted in seeder *******"<<endl;
+                writelog("******Connection accepted in seeder *******");
                 if( pthread_create( &thread_id , NULL ,  seederservice , (void*)&new_socket) < 0)
                 {
                     perror("\ncould not create thread in seeder\n");

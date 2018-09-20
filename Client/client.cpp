@@ -3,10 +3,10 @@
 
 #define CSIZE 150*1024
 
-// #define PORT 7000 
+const char *logpath;
 int dofiletransfering(string replydata,string filehash,string destpath)
 {
-    cout<<"\ndofiletransfering called : "<<replydata<<endl;
+    writelog("dofiletransfering called : "+replydata);
     vector <string> tokens; 
     stringstream check1(replydata); 
     string intermediate;
@@ -44,12 +44,13 @@ int dofiletransfering(string replydata,string filehash,string destpath)
             printf("\nConnection Failed in Client\n"); 
             return -1; 
         }
-        cout<<"******Connection  established for file transffered successfully !!!"<<endl;
+
+        writelog("******Connection  established for file transffered !!!");
 
         char *d_path = new char[destpath.length() + 1];
         strcpy(d_path, destpath.c_str());
-        ofstream myfile;
-        myfile.open(string(d_path));
+
+        ofstream myfile(d_path, ifstream::binary);
 
         char *clientreply = new char[filehash.length() + 1];
         strcpy(clientreply, filehash.c_str());
@@ -70,6 +71,7 @@ int dofiletransfering(string replydata,string filehash,string destpath)
 
 int main(int argc, char const *argv[]) 
 { 
+
     socketclass clientsocket;
     socketclass trackersocket1;
     socketclass trackersocket2;
@@ -86,11 +88,15 @@ int main(int argc, char const *argv[])
         clientsocket.setsocketdata(clientsocketstr);
         trackersocket1.setsocketdata(trackersocket1str);
         trackersocket2.setsocketdata(trackersocket2str);
-        string logfile=string(argv[4]);
-        
-        cout<<"Client socket : "<<clientsocket.ip<<" : "<<clientsocket.port<<endl;
-        cout<<"Tracker 1 socket: "<<trackersocket1.ip<<" : "<<trackersocket1.port<<endl;
-        cout<<"Tracker 2 socket: "<<trackersocket2.ip<<" : "<<trackersocket2.port<<endl;
+        logpath=argv[4];
+        ofstream myfile(logpath,std::ios_base::out); 
+        myfile.close();
+        writelog("********new client started *********");
+        writelog("Client socket : "+clientsocketstr);
+        writelog("Tracker 1 socket : "+trackersocket1str);
+        writelog("Tracker 2 socket : "+trackersocket2str);
+        // cout<<"Tracker 1 socket: "<<trackersocket1.ip<<" : "<<trackersocket1.port<<endl;
+        // cout<<"Tracker 2 socket: "<<trackersocket2.ip<<" : "<<trackersocket2.port<<endl;
 
         pthread_t cserverid;
         if( pthread_create(&cserverid , NULL ,  seederserverservice , (void*)&clientsocketstr) < 0)
@@ -125,7 +131,7 @@ int main(int argc, char const *argv[])
             printf("\nConnection Failed in client side\n"); 
             return -1; 
         }
-        cout<<"******Connection stablished successfully with tracker!!!"<<endl;
+        writelog("******Connection stablished successfully with tracker!!!");
 
         while(1)
         {
@@ -158,10 +164,12 @@ int main(int argc, char const *argv[])
                     cout<<"Invalid argument for SHARE Command"<<endl;
                     continue;
                 }
-                cout<<"SHARE command exe in client side"<<endl;
+                writelog("SHARE command exe in client side");
                 complexdata=executeshareclient(tokens,clientsocketstr,trackersocket1str,trackersocket1str);
                 if(complexdata=="-1")
                     continue;
+                else
+                    cout<<"SUCCESSFULLY SHARED"<<endl;
             }
             else if(tokens[0]=="get")
             {
@@ -170,7 +178,7 @@ int main(int argc, char const *argv[])
                     cout<<"Invalid argument for GET Command"<<endl;
                     continue;
                 }
-                cout<<"GET command exe in client side"<<endl;
+                writelog("GET command exe in client side");
                 complexdata=executegetclient(tokens);
                 filehash=complexdata.substr(complexdata.find("#") + 1);
                 destpath=tokens[2];
@@ -178,6 +186,7 @@ int main(int argc, char const *argv[])
                     continue;
                 else{
                     getflag=1;
+                    //cout<<"SUCCESSFULLY GET"<<endl;
                 }
             }
             else if(tokens[0]=="remove")
@@ -189,13 +198,14 @@ int main(int argc, char const *argv[])
                 }
                 mtorrentfilepath = new char[tokens[1].length() + 1];
                 strcpy(mtorrentfilepath, tokens[1].c_str());
-                cout<<"REMOVE command exe in client side"<<endl;
+                writelog("REMOVE command exe in client side");
                 complexdata=executeremoveclient(tokens,clientsocketstr);
                 if(complexdata=="-1")
-                    continue;
+                    continue;        
             }
             else{
-
+                cout<<"Invalid Command"<<endl;
+                continue;
             }
 
             char *clientreply = new char[complexdata.length() + 1];
@@ -203,11 +213,12 @@ int main(int argc, char const *argv[])
             //cout<<"clientreply : "<<clientreply<<endl;
             send(sock , clientreply , strlen(clientreply) , 0 ); 
             
-            printf("client msg message sent\n"); 
+            writelog("client msg message sent to Tracker"); 
             
             char buffer[1024] = {0}; 
             read( sock , buffer, 1024); 
-            printf("client got reply from tracker : %s\n",buffer );
+            writelog("client("+clientsocketstr+")got reply from tracker ===> "+string(buffer));
+            cout<<string(buffer)<<endl;
 
             string responce=string(buffer);
 
@@ -218,10 +229,13 @@ int main(int argc, char const *argv[])
 
             getflag=0;
 
+            //When Server Send Response for remove command
             if(responce=="Record removed successfully !!!")
             {
-                 if(remove(mtorrentfilepath) != 0 )
+                if(remove(mtorrentfilepath) != 0 )
                     perror( "\nError deleting mtorrent file\n");
+                else
+                     cout<<"SUCCESSFULLY REMOVED"<<endl;
             }
 
 

@@ -13,6 +13,8 @@
 using namespace std;
 
 extern map<string,string> filehashmap; 
+extern const char *logpath;
+// extern int globalcurchunksize;
 
 //mtorrent generator's functions
 string calHashofchunk(char *schunk,int length1,int shorthashflag);
@@ -25,3 +27,5 @@ string executegetclient(vector <string> tokens);
 string executeremoveclient(vector <string> tokens,string clntsckstr);
 
 void *seederserverservice(void *socket_desc);
+
+void writelog(string str);

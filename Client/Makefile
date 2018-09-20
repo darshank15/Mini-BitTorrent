@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -Wall 
 DEPS = clientheader.h 
-OBJ = share.o get.o remove.o seeder.o mtorrentcreator.o client.o
+OBJ = log.o share.o get.o remove.o seeder.o mtorrentcreator.o client.o
 %.o: %.cpp $(DEPS)
 	$(CC) $(CFLAGS) -c -o $@ $< -lssl -lcrypto -lpthread
 

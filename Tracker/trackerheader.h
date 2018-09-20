@@ -12,3 +12,5 @@
 #include <pthread.h>
 
 using namespace std;
+
+void writelog(string str);
