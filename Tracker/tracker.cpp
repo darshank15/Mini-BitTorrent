@@ -169,7 +169,7 @@ string executeshare(vector <string> tokens1,string data,char *seederlistfp)
 	// cout<<td.shash<<"::"<<td.csocket<<"::"<<td.cfpath<<endl;
     if(trackertable.find(td.shash) == trackertable.end())
     {
-    	ans="Data Recorded successfully in server for "+data;
+    	ans="Data Recorded successfully in server ";
     	trackertable[td.shash].push_back(td);
         writeseederlist(seederlistfp,seederlistdata);
     }
@@ -187,11 +187,11 @@ string executeshare(vector <string> tokens1,string data,char *seederlistfp)
     	}
     	if(flag)
     	{
-    		ans="Server already has these data :  "+data;
+    		ans="Server already has these data !!! ";
     			
     	}
     	else{
-    		ans="Data Recorded successfully in server for "+data;
+    		ans="Data Recorded successfully in server ";
     		trackertable[td.shash].push_back(td);
             writeseederlist(seederlistfp,seederlistdata);
     	}

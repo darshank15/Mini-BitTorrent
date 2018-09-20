@@ -4,7 +4,7 @@ Tracker 1 socket : 127.0.0.1:9090
 Tracker 2 socket : 123.98.78.10:1000
 ******Connection stablished successfully with tracker!!!
 GET command exe in client side
-(GET cmd)Complex Data need to send to tracker :get#cda7e8fa971867d3dd9f276588250199fa06453d
+(GET cmd)Complex Data need to send to tracker :get#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
 client msg message sent to Tracker
 client(127.0.0.1:8889)got reply from tracker ===> 127.0.0.1:8880
 dofiletransfering called : 127.0.0.1:8880
@@ -12,3 +12,11 @@ dofiletransfering called : 127.0.0.1:8880
 127.0.0.1:8880
 ****************************************************
 ******Connection  established for file transffered !!!
+Mtorrent creater called for filepath : ../test1
+Mtorrent Succesfully created
+share cmd gets Long Hash : e67501e6e11237b6ef84
+(SHARE cmd)Complex Data need to send to tracker :share#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8889#../test1
+REMOVE command exe in client side
+(REMOVE)Complex Data need to send to tracker :remove#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8889
+client msg message sent to Tracker
+client(127.0.0.1:8889)got reply from tracker ===> Record removed successfully !!!

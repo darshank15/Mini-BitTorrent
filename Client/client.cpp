@@ -142,9 +142,10 @@ int main(int argc, char const *argv[])
         while(1)
         {
 
-            string strcmd,filehash,destpath;
             int getflag=0;
             char *mtorrentfilepath;
+            string strcmd,filehash,destpath,getcmdmtorrentpath;
+           
             cout<<"Enter the command : "<<endl;
             getline(cin >> ws, strcmd);
 
@@ -171,7 +172,7 @@ int main(int argc, char const *argv[])
                     continue;
                 }
                 writelog("SHARE command exe in client side");
-                complexdata=executeshareclient(tokens,clientsocketstr,trackersocket1str,trackersocket1str);
+                complexdata=executeshareclient(tokens,clientsocketstr,trackersocket1str,trackersocket2str);
                 if(complexdata=="-1")
                     continue;
                 else
@@ -188,6 +189,7 @@ int main(int argc, char const *argv[])
                 complexdata=executegetclient(tokens);
                 filehash=complexdata.substr(complexdata.find("#") + 1);
                 destpath=tokens[2];
+                getcmdmtorrentpath=tokens[1];
                 if(complexdata=="-1")
                     continue;
                 else{
@@ -251,6 +253,19 @@ int main(int argc, char const *argv[])
                 {
                     cout<<"FILE SUCCESSFULLY DOWNLOADED"<<endl;
                     listdownload.push_back(destpath);
+                    vector<string> temptokens;
+                    temptokens.push_back("share");
+                    temptokens.push_back(destpath);
+                    temptokens.push_back(getcmdmtorrentpath);
+                    complexdata=executeshareclient(temptokens,clientsocketstr,trackersocket1str,trackersocket2str);
+                    if(complexdata!="-1")
+                    {
+                        char *clt = new char[complexdata.length() + 1];
+                        strcpy(clt, complexdata.c_str());
+                        send(sock , clt , strlen(clt) , 0 );
+                        char buff[1024] = {0}; 
+                        read( sock , buff, 1024);
+                    }
                 }
                 else
                 {

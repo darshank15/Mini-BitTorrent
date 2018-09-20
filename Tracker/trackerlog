@@ -1,33 +1,32 @@
 ******Connection accepted in tracker side*******
-Tracker get Data from Client : share#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8880#../OS_Assignment_2.pdf
+Tracker get Data from Client : share#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8880#../test.txt
 Tracker executing for SHARE command !!!
 ****************seederlist Data**************
-Data for Hash value : 0fbb9b58b46ddc42ab801fc136c821ef2e82c690
-127.0.0.1:8880 -----> abc.jpg
-Data for Hash value : 1175687c2633f5099f5c952724d5ba496ae20b41
-127.0.0.1:8880 -----> ../video.mp4
-Data for Hash value : 265ba79425efec4860dc3554b3a527ecd416284e
-127.0.0.1:8880 -----> client.cpp
 Data for Hash value : 4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
 127.0.0.1:8880 -----> ../test.txt
-Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
-127.0.0.1:8880 -----> ../OS_Assignment_2.pdf
 **********************************************
 Reply message sent from Tracker to client
 ******Connection accepted in tracker side*******
-Tracker get Data from Client : get#cda7e8fa971867d3dd9f276588250199fa06453d
+Tracker get Data from Client : get#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
 Tracker executing for GET command !!!
 ****************seederlist Data**************
-Data for Hash value : 0fbb9b58b46ddc42ab801fc136c821ef2e82c690
-127.0.0.1:8880 -----> abc.jpg
-Data for Hash value : 1175687c2633f5099f5c952724d5ba496ae20b41
-127.0.0.1:8880 -----> ../video.mp4
-Data for Hash value : 265ba79425efec4860dc3554b3a527ecd416284e
-127.0.0.1:8880 -----> client.cpp
 Data for Hash value : 4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
 127.0.0.1:8880 -----> ../test.txt
-Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
-127.0.0.1:8880 -----> ../OS_Assignment_2.pdf
+**********************************************
+Reply message sent from Tracker to client
+Tracker get Data from Client : share#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8889#../test1
+Tracker executing for SHARE command !!!
+****************seederlist Data**************
+Data for Hash value : 4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
+127.0.0.1:8880 -----> ../test.txt
+127.0.0.1:8889 -----> ../test1
+**********************************************
+Reply message sent from Tracker to client
+Tracker get Data from Client : remove#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8889
+Tracker executing for REMOVE command !!!
+****************seederlist Data**************
+Data for Hash value : 4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
+127.0.0.1:8880 -----> ../test.txt
 **********************************************
 Reply message sent from Tracker to client
 Tracker get Data from Client : 
