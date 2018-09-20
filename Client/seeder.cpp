@@ -1,7 +1,7 @@
 #include "clientheader.h"
 #include "socket.cpp"
 
-#define CSIZE 150*1024
+#define CSIZE 15
 
 void *seederservice(void *socket_desc)
 {

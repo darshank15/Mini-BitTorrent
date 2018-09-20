@@ -1,7 +1,7 @@
 #include "clientheader.h"
 #include "socket.cpp"
 
-#define CSIZE 150*1024
+#define CSIZE 15
 
 const char *logpath;
 int dofiletransfering(string replydata,string filehash,string destpath)
@@ -50,18 +50,18 @@ int dofiletransfering(string replydata,string filehash,string destpath)
         char *d_path = new char[destpath.length() + 1];
         strcpy(d_path, destpath.c_str());
 
-        ofstream myfile(d_path, ifstream::binary);
+        ofstream myfile(d_path, ofstream::binary);
 
         char *clientreply = new char[filehash.length() + 1];
         strcpy(clientreply, filehash.c_str());
         send(sock , clientreply , strlen(clientreply) , 0 );
         int n;
         do{
-             char buffer[CSIZE] = {0}; 
-             n=read( sock , buffer, CSIZE);
-             string temp=string(buffer);
-             //printf("client(file transffered) got reply from server: %s\n",buffer );
-             myfile<<temp;
+
+            char *buffer = new char[CSIZE];
+            n=read( sock , buffer, CSIZE);
+            myfile.write(buffer,CSIZE);
+
         }while(n>0);
        
         myfile.close();

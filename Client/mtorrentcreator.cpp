@@ -1,6 +1,6 @@
 #include "clientheader.h"
 
-#define CSIZE 150*1024;
+#define CSIZE 15
 
 char *filepath, *mtorrentpath;
 

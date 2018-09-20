@@ -1,0 +1,50 @@
+******Connection accepted in tracker side*******
+Tracker get Data from Client : share#447970077f1f7134eaddfddf2bd9f15f13e000da#127.0.0.1:8880#OS.pdf
+Tracker executing for SHARE command !!!
+****************seederlist Data**************
+Data for Hash value : 447970077f1f7134eaddfddf2bd9f15f13e000da
+127.0.0.1:8880 -----> OS.pdf
+Data for Hash value : 9003109b2c1744230a17d23f3d42f3d9bc1bb340
+127.0.0.1:8880 -----> log.cpp
+Data for Hash value : a0e05f331eb5ea84cdd0dde89fb5fd61269a50f3
+127.0.0.1:8880 -----> ../test.txt
+**********************************************
+Reply message sent from Tracker to client
+******Connection accepted in tracker side*******
+Tracker get Data from Client : get#447970077f1f7134eaddfddf2bd9f15f13e000da
+Tracker executing for GET command !!!
+****************seederlist Data**************
+Data for Hash value : 447970077f1f7134eaddfddf2bd9f15f13e000da
+127.0.0.1:8880 -----> OS.pdf
+Data for Hash value : 9003109b2c1744230a17d23f3d42f3d9bc1bb340
+127.0.0.1:8880 -----> log.cpp
+Data for Hash value : a0e05f331eb5ea84cdd0dde89fb5fd61269a50f3
+127.0.0.1:8880 -----> ../test.txt
+**********************************************
+Reply message sent from Tracker to client
+Tracker get Data from Client : share#103eb85d9c7a4d6a41d560e1fabff439063b3b6d#127.0.0.1:8880#abc.jpg
+Tracker executing for SHARE command !!!
+****************seederlist Data**************
+Data for Hash value : 103eb85d9c7a4d6a41d560e1fabff439063b3b6d
+127.0.0.1:8880 -----> abc.jpg
+Data for Hash value : 447970077f1f7134eaddfddf2bd9f15f13e000da
+127.0.0.1:8880 -----> OS.pdf
+Data for Hash value : 9003109b2c1744230a17d23f3d42f3d9bc1bb340
+127.0.0.1:8880 -----> log.cpp
+Data for Hash value : a0e05f331eb5ea84cdd0dde89fb5fd61269a50f3
+127.0.0.1:8880 -----> ../test.txt
+**********************************************
+Reply message sent from Tracker to client
+Tracker get Data from Client : get#103eb85d9c7a4d6a41d560e1fabff439063b3b6d
+Tracker executing for GET command !!!
+****************seederlist Data**************
+Data for Hash value : 103eb85d9c7a4d6a41d560e1fabff439063b3b6d
+127.0.0.1:8880 -----> abc.jpg
+Data for Hash value : 447970077f1f7134eaddfddf2bd9f15f13e000da
+127.0.0.1:8880 -----> OS.pdf
+Data for Hash value : 9003109b2c1744230a17d23f3d42f3d9bc1bb340
+127.0.0.1:8880 -----> log.cpp
+Data for Hash value : a0e05f331eb5ea84cdd0dde89fb5fd61269a50f3
+127.0.0.1:8880 -----> ../test.txt
+**********************************************
+Reply message sent from Tracker to client
