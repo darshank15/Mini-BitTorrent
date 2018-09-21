@@ -12,8 +12,8 @@
 #include <pthread.h>
 using namespace std;
 
-extern map<string,string> filehashmap; 
 extern const char *logpath;
+
 // extern int globalcurchunksize;
 
 //mtorrent generator's functions

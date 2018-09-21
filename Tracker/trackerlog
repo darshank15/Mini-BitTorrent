@@ -1,32 +1,41 @@
 ******Connection accepted in tracker side*******
-Tracker get Data from Client : share#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8880#../test.txt
+Tracker get Data from Client : share#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8880#../os1
 Tracker executing for SHARE command !!!
 ****************seederlist Data**************
-Data for Hash value : 4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
-127.0.0.1:8880 -----> ../test.txt
+Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
+127.0.0.1:8880 -----> ../os1
 **********************************************
 Reply message sent from Tracker to client
 ******Connection accepted in tracker side*******
-Tracker get Data from Client : get#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
-Tracker executing for GET command !!!
-****************seederlist Data**************
-Data for Hash value : 4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
-127.0.0.1:8880 -----> ../test.txt
-**********************************************
-Reply message sent from Tracker to client
-Tracker get Data from Client : share#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8889#../test1
+Tracker get Data from Client : share#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8770#../os2
 Tracker executing for SHARE command !!!
 ****************seederlist Data**************
-Data for Hash value : 4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
-127.0.0.1:8880 -----> ../test.txt
-127.0.0.1:8889 -----> ../test1
+Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
+127.0.0.1:8880 -----> ../os1
+127.0.0.1:8770 -----> ../os2
 **********************************************
 Reply message sent from Tracker to client
-Tracker get Data from Client : remove#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8889
+Tracker get Data from Client : get#cda7e8fa971867d3dd9f276588250199fa06453d
+Tracker executing for GET command !!!
+****************seederlist Data**************
+Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
+127.0.0.1:8880 -----> ../os1
+127.0.0.1:8770 -----> ../os2
+**********************************************
+Reply message sent from Tracker to client
+Tracker get Data from Client : share#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8770#../os3
+Tracker executing for SHARE command !!!
+****************seederlist Data**************
+Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
+127.0.0.1:8880 -----> ../os1
+127.0.0.1:8770 -----> ../os2
+**********************************************
+Reply message sent from Tracker to client
+Tracker get Data from Client : remove#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8770
 Tracker executing for REMOVE command !!!
 ****************seederlist Data**************
-Data for Hash value : 4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca
-127.0.0.1:8880 -----> ../test.txt
+Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
+127.0.0.1:8880 -----> ../os1
 **********************************************
 Reply message sent from Tracker to client
 Tracker get Data from Client : 

@@ -1,7 +1,5 @@
 #include "clientheader.h"
 
-map<string,string> filehashmap;
-
 string executeshareclient(vector <string> tokens,string clntsckstr,string trcksck1str,string trcksck2str)
 {
     string cmd=tokens[0];
@@ -29,7 +27,5 @@ string executeshareclient(vector <string> tokens,string clntsckstr,string trcksc
     
     string ans=cmd+"#"+shorthash+"#"+clntsckstr+"#"+fpath;
     writelog("(SHARE cmd)Complex Data need to send to tracker :"+ans);
-
-    filehashmap.emplace(shorthash,fpath);
     return ans;
 }

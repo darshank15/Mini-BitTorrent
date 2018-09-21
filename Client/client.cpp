@@ -5,26 +5,33 @@
 
 const char *logpath;
 vector<string> listdownload;
+vector<pair<string,string>> clientfilepath;
 
-int dofiletransfering(string replydata,string filehash,string destpath)
+int dofiletransfering(string replydata,string destpath)
 {
     writelog("dofiletransfering called : "+replydata);
-    vector <string> tokens; 
     stringstream check1(replydata); 
     string intermediate;
-    while(getline(check1, intermediate, '#')) 
+    while(getline(check1, intermediate, '@')) 
     { 
-        tokens.push_back(intermediate); 
+        stringstream check2(intermediate);
+        vector <string> clientsocketvc;
+        string subintermediate;
+        while(getline(check2, subintermediate, '#')) 
+        {
+            clientsocketvc.push_back(subintermediate);
+        }
+        clientfilepath.push_back({clientsocketvc[0],clientsocketvc[1]});
     }
     writelog("******Avialable seeders for downloading file*******");
-    for(unsigned int i=0;i<tokens.size();i++)
+    for(unsigned int i=0;i<clientfilepath.size();i++)
     {
-        writelog(tokens[i]);
+        writelog(clientfilepath[i].first +"--->"+clientfilepath[i].second);
     }
     writelog("****************************************************");
     socketclass csocket;
-    csocket.setsocketdata(tokens[0]);
-
+    csocket.setsocketdata(clientfilepath[0].first);
+    string filepath=clientfilepath[0].second;
         int sock = 0; 
         struct sockaddr_in serv_addr;
         if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
@@ -58,8 +65,8 @@ int dofiletransfering(string replydata,string filehash,string destpath)
 
         ofstream myfile(d_path, ofstream::binary);
 
-        char *clientreply = new char[filehash.length() + 1];
-        strcpy(clientreply, filehash.c_str());
+        char *clientreply = new char[filepath.length() + 1];
+        strcpy(clientreply, filepath.c_str());
         send(sock , clientreply , strlen(clientreply) , 0 );
         int n;
         do{
@@ -144,7 +151,7 @@ int main(int argc, char const *argv[])
 
             int getflag=0;
             char *mtorrentfilepath;
-            string strcmd,filehash,destpath,getcmdmtorrentpath;
+            string strcmd,destpath,getcmdmtorrentpath;
            
             cout<<"Enter the command : "<<endl;
             getline(cin >> ws, strcmd);
@@ -187,7 +194,6 @@ int main(int argc, char const *argv[])
                 }
                 writelog("GET command exe in client side");
                 complexdata=executegetclient(tokens);
-                filehash=complexdata.substr(complexdata.find("#") + 1);
                 destpath=tokens[2];
                 getcmdmtorrentpath=tokens[1];
                 if(complexdata=="-1")
@@ -248,7 +254,7 @@ int main(int argc, char const *argv[])
 
             if(getflag==1)
             {
-                int ans=dofiletransfering(responce,filehash,destpath);
+                int ans=dofiletransfering(responce,destpath);
                 if(ans==1)
                 {
                     cout<<"FILE SUCCESSFULLY DOWNLOADED"<<endl;

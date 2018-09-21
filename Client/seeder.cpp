@@ -9,11 +9,10 @@ void *seederservice(void *socket_desc)
 	char buffer[1024] = {0}; 
     read( new_socket , buffer, 1024); 
     writelog("Seeder gets Data from Clients : "+string(buffer));
-    string short_hash=string(buffer);
-    string file_path=filehashmap[short_hash];
+    string actualfilepath=string(buffer);
 
-    char *fpath = new char[file_path.length() + 1];
-    strcpy(fpath, file_path.c_str());
+    char *fpath = new char[actualfilepath.length() + 1];
+    strcpy(fpath, actualfilepath.c_str());
 
         ifstream file1(fpath, ifstream::binary);
 

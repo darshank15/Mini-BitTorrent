@@ -29,7 +29,6 @@ string executeremoveclient(vector <string> tokens,string clntsckstr)
 
     string ans=cmd+"#"+shorthash+"#"+clntsckstr;
     writelog("(REMOVE)Complex Data need to send to tracker :"+ans);
-    filehashmap.erase(shorthash);
     return ans;
 
 }
