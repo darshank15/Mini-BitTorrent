@@ -19,7 +19,7 @@ int dofiletransfering(string replydata,string destpath)
      writelog("dofiletransfering called : "+replydata);
     stringstream check1(replydata); 
     string intermediate;
-    cout<<"reply : "<<replydata<<endl;
+    //cout<<"reply : "<<replydata<<endl;
     while(getline(check1, intermediate, '@')) 
     { 
         stringstream check2(intermediate);
@@ -195,11 +195,11 @@ int main(int argc, char const *argv[])
         while(1)
         {
 
-            int getflag=0;
+            int getflag=0,closeflag=0;
             char *mtorrentfilepath;
             string strcmd,destpath,getcmdmtorrentpath;
            
-            cout<<"Enter the command : "<<endl;
+            // cout<<"Enter the command : "<<endl;
             getline(cin >> ws, strcmd);
 
             // cout<<"Command from cient : "<<strcmd;
@@ -228,8 +228,6 @@ int main(int argc, char const *argv[])
                 complexdata=executeshareclient(tokens,clientsocketstr,trackersocket1str,trackersocket2str);
                 if(complexdata=="-1")
                     continue;
-                else
-                    cout<<"SUCCESSFULLY SHARED"<<endl;
             }
             else if(tokens[0]=="get")
             {
@@ -246,7 +244,6 @@ int main(int argc, char const *argv[])
                     continue;
                 else{
                     getflag=1;
-                    //cout<<"SUCCESSFULLY GET"<<endl;
                 }
             }
             else if(tokens[0]=="remove")
@@ -271,13 +268,19 @@ int main(int argc, char const *argv[])
                 }
                 else
                 {
-                     cout<<"********* DOWNLOADS **********"<<endl;
+                    cout<<"********* DOWNLOADS **********"<<endl;
                     for(unsigned int i=0;i<listdownload.size();i++)
                     {
                         cout<<listdownload[i]<<endl;
                     }
                 } 
                 continue;
+            }
+            else if(tokens[0]=="close")
+            {
+                writelog("CLOSE command exe in client side");
+                complexdata="close#"+clientsocketstr;
+                closeflag=1;
             }
             else{
                 cout<<"INVALID COMMAND"<<endl;
@@ -294,10 +297,11 @@ int main(int argc, char const *argv[])
             char buffer[1024] = {0}; 
             read( sock , buffer, 1024); 
             writelog("client("+clientsocketstr+")got reply from tracker ===> "+string(buffer));
-            cout<<"Server Reply ===> "<<string(buffer)<<endl;
+            
+            if(getflag!=1)
+                cout<<string(buffer)<<endl;
 
             string responce=string(buffer);
-
             if(getflag==1)
             {
                     struct complexData obj1;
@@ -316,16 +320,20 @@ int main(int argc, char const *argv[])
                     }
 
             }
-
             getflag=0;
 
             //When Server Send Response for remove command
-            if(responce=="Record removed successfully !!!")
+            if(responce=="FILE SUCCESSFULLY REMOVED")
             {
                 if(remove(mtorrentfilepath) != 0 )
                     perror( "\nError deleting mtorrent file\n");
-                else
-                     cout<<"SUCCESSFULLY REMOVED"<<endl;
+            }
+
+            if(closeflag==1)
+            {
+                cout<<"Thank You !!!"<<endl;
+                close(sock);
+                break;
             }
 
 

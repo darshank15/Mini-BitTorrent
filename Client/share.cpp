@@ -17,7 +17,7 @@ string executeshareclient(vector <string> tokens,string clntsckstr,string trcksc
     string filehash=createTorrentFile(fp,tp,trcksck1str,trcksck2str);
     if(filehash=="-1")
     {
-        cout<<"\nError Encounter for creating hash of file in sharing: "<<fpath<<endl;
+        writelog("\nError Encounter for creating hash of file in sharing: "+fpath);
         return "-1";
     }
     writelog("share cmd gets Long Hash : "+filehash); //need to do hash of hash

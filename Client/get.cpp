@@ -9,7 +9,7 @@ string executegetclient(vector <string> tokens)
     ifstream fileptr(mtpath, ifstream::binary);
     if (!fileptr)
     {
-        cout << "Mtorrent not exist : (GET)" << string(mtpath) << endl;
+        cout << "Mtorrent not exist : (GET) : " << string(mtpath) << endl;
         return "-1";
     }
     int count=4;

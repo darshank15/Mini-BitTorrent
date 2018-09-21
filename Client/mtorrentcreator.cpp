@@ -46,7 +46,7 @@ string getFileHash(char *fpath)
     /* basic sanity check */
     if (!file1)
     {
-        cout << "Can't Open file1  : " << string(fpath) << endl;
+        cout << "FILE DOES NOT EXITST : "<< string(fpath) << endl;
         return "-1";
     }
 
@@ -95,9 +95,10 @@ string createTorrentFile(char *fpath, char *mtpath,string tcksocket1,string tcks
     struct stat sb;
     if (stat(fpath, &sb) == -1)
     {
-        perror("lstat");
+        cout<<"FILE NOT FOUND"<<endl;
         return "-1";
     }
+
     ofstream myfile;
     myfile.open(string(mtpath));
     myfile << tcksocket1 << endl;

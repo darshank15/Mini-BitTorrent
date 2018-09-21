@@ -146,18 +146,18 @@ string executeremove(vector <string> tokens1,string data,char *seederlistfp)
             }
             if(cflag==1)
             {
-                 temptd.erase(it);
-                 trackertable[shash]=temptd; 
+                temptd.erase(it);
+                trackertable[shash]=temptd; 
             }      
         }
     
         if(flag==1)
         {
             updateseederlist(seederlistfp);
-            return "Record removed successfully !!!";
+            return "FILE SUCCESSFULLY REMOVED";
         }
         else{
-            return "Record doesn't found in database !!!";
+            return "FILE WAS NOT SHARED";
         }
 }
 
@@ -169,7 +169,7 @@ string executeshare(vector <string> tokens1,string data,char *seederlistfp)
 	// cout<<td.shash<<"::"<<td.csocket<<"::"<<td.cfpath<<endl;
     if(trackertable.find(td.shash) == trackertable.end())
     {
-    	ans="Data Recorded successfully in server ";
+    	ans="SUCCESSFULLY SHARED";
     	trackertable[td.shash].push_back(td);
         writeseederlist(seederlistfp,seederlistdata);
     }
@@ -187,11 +187,11 @@ string executeshare(vector <string> tokens1,string data,char *seederlistfp)
     	}
     	if(flag)
     	{
-    		ans="Server already has these data !!! ";
+    		ans="FILE ALREADY SHARED";
     			
     	}
     	else{
-    		ans="Data Recorded successfully in server ";
+    		ans="SUCCESSFULLY SHARED";
     		trackertable[td.shash].push_back(td);
             writeseederlist(seederlistfp,seederlistdata);
     	}
@@ -200,12 +200,61 @@ string executeshare(vector <string> tokens1,string data,char *seederlistfp)
     return ans;
 }
 
+string executeclose(vector <string> tokens1,char *seederlistfp)
+{
+        string ans="CLIENT CLOSED";
+       
+        string clientsocket=tokens1[1];
+        //cout<<"---------->client socket : "<<clientsocket<<endl;
+        map<string,vector<trackerdata>>::iterator mpit;
+        for(mpit=trackertable.begin();mpit!=trackertable.end();mpit++)
+        {
+            int flag=0;
+            int cflag=0;
+            string hash = mpit->first;
+            vector<trackerdata> temptd = mpit->second;
+            int sizeofvector=temptd.size();
+            vector<trackerdata>::iterator it;
+            for(it=temptd.begin();it!=temptd.end();it++)
+            {
+                if((*it).csocket==clientsocket)
+                {
+                    flag=1;
+                    if(sizeofvector==1)
+                    {
+                        flag=1;
+                        break;
+                    }
+                    else{
+
+                        cflag=1;
+                        break;
+                    }
+                }
+            }
+            if(flag==1)
+            {
+                ans="CLIENT CLOSED";
+                trackertable.erase(hash); 
+            }
+            if(cflag==1)
+            {
+                temptd.erase(it);
+                trackertable[hash]=temptd;
+                ans="CLIENT CLOSED";
+            }
+        }
+        updateseederlist(seederlistfp);
+
+    return ans;  
+}
 
 void *serverservice(void *socket_desc)
 {
     int new_socket = *(int*)socket_desc;
     while(1)
     {
+        int closeflag=0;
         char buffer[1024] = {0}; 
         read( new_socket , buffer, 1024); 
         writelog("Tracker get Data from Client : "+string(buffer));
@@ -236,6 +285,16 @@ void *serverservice(void *socket_desc)
             writelog("Tracker executing for REMOVE command !!!");
             clientreplymsg=executeremove(tokens1,data,seederfilep);
         }
+        else if(tokens1[0]=="close")
+        {
+            writelog("Tracker executing for CLOSE command !!!");
+            clientreplymsg=executeclose(tokens1,seederfilep);
+            closeflag=1;
+        }
+        else{
+            cout<<"Can't identify the client request ";
+
+        }
 
        
         printeverything();
@@ -246,9 +305,17 @@ void *serverservice(void *socket_desc)
         //cout<<"serverreply : "<<serverreply<<endl;
         send(new_socket , serverreply , strlen(serverreply) , 0 ); 
         
-        writelog("Reply message sent from Tracker to client"); 
+        writelog("Reply message sent from Tracker to client");
+
+        if(closeflag==1)
+        {
+            close(new_socket);
+            break;
+        }
 
      }
+
+     return socket_desc;
 }
 
 
@@ -329,11 +396,11 @@ int main(int argc, char *argv[])
                 //pthread_join( thread_id , NULL);
                 // cout<<"New Client created assigned"<<endl;
                  
-                if (new_socket < 0)
-                {
-                    perror("accept failed");
-                    //return 1;
-                }
+                // if (new_socket < 0)
+                // {
+                //     perror("accept failed");
+                //     //return 1;
+                // }
         }
 
     }

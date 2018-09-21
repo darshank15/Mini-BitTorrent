@@ -4,11 +4,55 @@ Tracker 1 socket : 127.0.0.1:9090
 Tracker 2 socket : 123.98.78.10:1000
 ******Connection stablished successfully with tracker!!!
 SHARE command exe in client side
-Mtorrent creater called for filepath : ../video.mp4
+Mtorrent creater called for filepath : ../test.txt
 Mtorrent Succesfully created
-share cmd gets Long Hash : d8dd5956a8fa50b6a00459956fc51bd15b834baa2c1c37c8541ccef495478b3ee85591cfb3389a3d4ec21f8ae806b0b21d692cda46f0684bfd0d5ff0c5fc215211565e887460903b2e20e1e6d15f3d4104794b3db7a2ab4f1d6843cfb792541f2f74f9e6a3b3db507e8319c34837936e37501b2f758e6c984ac7e15a6ea22d5266146f3ffca825527524a763f9970a55f67ae1a669668f16ea479f8775326299a57b462e69f95ac5a20351afb39d9a7fd1d061a5bdf881a28c443b0585921c78e11d8770274b840aa9044b364da20f18e3706bbf44f1756fbb5a27b64c2c147ca86641fc3aadb4b9c9b5540792b7cf29a2db2cf8201172b04f3cdc5e013f28433185af60f13f827841368dc5dee24b5ed55d69cba783caf40e9eb0ba57b37a5717b4f8088aa5d73abac8aa38d5dbe3ff4509ef07faa19258c95246b1b198d5d462dd5b63f5436ec60d57af4b25c629bfd4f73492812fdcae6775e907bcd1032d81fde07e4a3d8aba
-(SHARE cmd)Complex Data need to send to tracker :share#1175687c2633f5099f5c952724d5ba496ae20b41#127.0.0.1:8976#../video.mp4
+share cmd gets Long Hash : e67501e6e11237b6ef84
+(SHARE cmd)Complex Data need to send to tracker :share#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8976#../test.txt
 client msg message sent to Tracker
-client(127.0.0.1:8976)got reply from tracker ===> Server already has these data !!! 
+client(127.0.0.1:8976)got reply from tracker ===> FILE ALREADY SHARED
+SHARE command exe in client side
+Mtorrent creater called for filepath : log.cpp
+Mtorrent Succesfully created
+share cmd gets Long Hash : dbb962c5a640073caed8
+(SHARE cmd)Complex Data need to send to tracker :share#9003109b2c1744230a17d23f3d42f3d9bc1bb340#127.0.0.1:8976#log.cpp
+client msg message sent to Tracker
+client(127.0.0.1:8976)got reply from tracker ===> SUCCESSFULLY SHARED
 ******Connection accepted in seeder *******
-Seeder gets Data from Clients : ../video.mp4
+Seeder gets Data from Clients : log.cpp
+REMOVE command exe in client side
+(REMOVE)Complex Data need to send to tracker :remove#37dbefd28be2eef7febd0baa7e528e75765a1670#127.0.0.1:8976
+client msg message sent to Tracker
+client(127.0.0.1:8976)got reply from tracker ===> FILE WAS NOT SHARED
+GET command exe in client side
+(GET cmd)Complex Data need to send to tracker :get#37dbefd28be2eef7febd0baa7e528e75765a1670
+client msg message sent to Tracker
+client(127.0.0.1:8976)got reply from tracker ===> 127.0.0.1:9999#client.cpp
+dofiletransfering called : 127.0.0.1:9999#client.cpp
+******Avialable seeders for downloading file*******
+127.0.0.1:9999--->client.cpp
+****************************************************
+******Connection  established for file transffered !!!
+Mtorrent creater called for filepath : ../client1.cpp
+Mtorrent Succesfully created
+share cmd gets Long Hash : 30ec0acc9bb05f62b7a4
+(SHARE cmd)Complex Data need to send to tracker :share#37dbefd28be2eef7febd0baa7e528e75765a1670#127.0.0.1:8976#../client1.cpp
+REMOVE command exe in client side
+(REMOVE)Complex Data need to send to tracker :remove#37dbefd28be2eef7febd0baa7e528e75765a1670#127.0.0.1:8976
+client msg message sent to Tracker
+client(127.0.0.1:8976)got reply from tracker ===> FILE SUCCESSFULLY REMOVED
+GET command exe in client side
+(GET cmd)Complex Data need to send to tracker :get#9003109b2c1744230a17d23f3d42f3d9bc1bb340
+client msg message sent to Tracker
+client(127.0.0.1:8976)got reply from tracker ===> 127.0.0.1:8976#log.cpp
+dofiletransfering called : 127.0.0.1:8976#log.cpp
+******Avialable seeders for downloading file*******
+127.0.0.1:9999--->client.cpp
+127.0.0.1:8976--->log.cpp
+****************************************************
+******Connection  established for file transffered !!!
+Mtorrent creater called for filepath : abc/def
+
+Error Encounter for creating hash of file in sharing: abc/def
+CLOSE command exe in client side
+client msg message sent to Tracker
+client(127.0.0.1:8976)got reply from tracker ===> CLIENT CLOSED
