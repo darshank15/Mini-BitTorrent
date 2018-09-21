@@ -256,7 +256,12 @@ void *serverservice(void *socket_desc)
     {
         int closeflag=0;
         char buffer[1024] = {0}; 
-        read( new_socket , buffer, 1024); 
+        int rc=read( new_socket , buffer, 1024); 
+        if (rc == 0)
+        {
+            close(new_socket);
+            return socket_desc;
+        }
         writelog("Tracker get Data from Client : "+string(buffer));
         string clientreplymsg;
          
