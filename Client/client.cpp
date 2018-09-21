@@ -1,17 +1,25 @@
 #include "clientheader.h"
 #include "socket.cpp"
 
+struct complexData{
+    char *replydata1,*destpath1,*getcmdmtorrentpath1;
+    int sock1;
+   
+};
+
 #define CSIZE 512*1024
 
 const char *logpath;
+string clientsocketstr,trackersocket1str,trackersocket2str;
 vector<string> listdownload;
 vector<pair<string,string>> clientfilepath;
 
 int dofiletransfering(string replydata,string destpath)
 {
-    writelog("dofiletransfering called : "+replydata);
+     writelog("dofiletransfering called : "+replydata);
     stringstream check1(replydata); 
     string intermediate;
+    cout<<"reply : "<<replydata<<endl;
     while(getline(check1, intermediate, '@')) 
     { 
         stringstream check2(intermediate);
@@ -21,7 +29,7 @@ int dofiletransfering(string replydata,string destpath)
         {
             clientsocketvc.push_back(subintermediate);
         }
-        clientfilepath.push_back({clientsocketvc[0],clientsocketvc[1]});
+        clientfilepath.push_back(pair<string,string> (clientsocketvc[0],clientsocketvc[1]));
     }
     writelog("******Avialable seeders for downloading file*******");
     for(unsigned int i=0;i<clientfilepath.size();i++)
@@ -30,7 +38,8 @@ int dofiletransfering(string replydata,string destpath)
     }
     writelog("****************************************************");
     socketclass csocket;
-    csocket.setsocketdata(clientfilepath[0].first);
+    //cout<<"socket : "<<clientfilepath[0].first<<endl;
+    csocket.setsocketdata((clientfilepath[0].first));
     string filepath=clientfilepath[0].second;
         int sock = 0; 
         struct sockaddr_in serv_addr;
@@ -46,6 +55,7 @@ int dofiletransfering(string replydata,string destpath)
         serv_addr.sin_port = htons(csocket.port);
            
         //Convert IPv4 and IPv6 addresses from text to binary form 
+        //cout<<"ip : "<<csocket.ip<<":"<<csocket.port<<endl;
         if(inet_pton(AF_INET, csocket.ip, &serv_addr.sin_addr)<=0)  
         { 
             printf("\nClient File  : Invalid address/ Address not supported \n"); 
@@ -81,6 +91,42 @@ int dofiletransfering(string replydata,string destpath)
 
         return 1;
 }
+void *getcommandExecution(void *complexstruct)
+{
+        struct complexData obj = *(struct complexData*)complexstruct;
+        string replydata=string(obj.replydata1);
+        string destpath=string(obj.destpath1);
+        string getcmdmtorrentpath=string(obj.getcmdmtorrentpath1);
+        //cout<<"Reply data : "<<replydata<<endl;
+        //cout<<"destpath : "<<destpath<<endl;
+        //cout<<"getcmdtorrentpath : "<<getcmdmtorrentpath<<endl;
+        int sock=obj.sock1;
+        int ans = dofiletransfering(replydata,destpath);
+        if(ans==1)
+        {
+            cout<<"FILE SUCCESSFULLY DOWNLOADED"<<endl;
+            listdownload.push_back(destpath);
+            vector<string> temptokens;
+            temptokens.push_back("share");
+            temptokens.push_back(destpath);
+            temptokens.push_back(getcmdmtorrentpath);
+            string complexdata=executeshareclient(temptokens,clientsocketstr,trackersocket1str,trackersocket2str);
+            if(complexdata!="-1")
+            {
+                char *clt = new char[complexdata.length() + 1];
+                strcpy(clt, complexdata.c_str());
+                send(sock , clt , strlen(clt) , 0 );
+                char buff[1024] = {0}; 
+                read( sock , buff, 1024);
+            }
+        }
+        else
+        {
+            cout<<"ERROR IN DOWNLOADING FILE"<<endl;
+        }
+
+        return complexstruct;
+}
 
 int main(int argc, char const *argv[]) 
 { 
@@ -95,9 +141,9 @@ int main(int argc, char const *argv[])
     }
     else
     {
-        string clientsocketstr=string(argv[1]);
-        string trackersocket1str=string(argv[2]);
-        string trackersocket2str=string(argv[3]);
+        clientsocketstr=string(argv[1]);
+        trackersocket1str=string(argv[2]);
+        trackersocket2str=string(argv[3]);
         clientsocket.setsocketdata(clientsocketstr);
         trackersocket1.setsocketdata(trackersocket1str);
         trackersocket2.setsocketdata(trackersocket2str);
@@ -254,29 +300,20 @@ int main(int argc, char const *argv[])
 
             if(getflag==1)
             {
-                int ans=dofiletransfering(responce,destpath);
-                if(ans==1)
-                {
-                    cout<<"FILE SUCCESSFULLY DOWNLOADED"<<endl;
-                    listdownload.push_back(destpath);
-                    vector<string> temptokens;
-                    temptokens.push_back("share");
-                    temptokens.push_back(destpath);
-                    temptokens.push_back(getcmdmtorrentpath);
-                    complexdata=executeshareclient(temptokens,clientsocketstr,trackersocket1str,trackersocket2str);
-                    if(complexdata!="-1")
+                    struct complexData obj1;
+                    obj1.replydata1=new char[responce.length()+1];
+                    strcpy(obj1.replydata1,responce.c_str());
+                    obj1.destpath1=new char[destpath.length()+1];
+                    strcpy(obj1.destpath1,destpath.c_str());
+                    obj1.getcmdmtorrentpath1=new char[getcmdmtorrentpath.length()+1];
+                    strcpy(obj1.getcmdmtorrentpath1,getcmdmtorrentpath.c_str());
+                    obj1.sock1=sock;
+
+                    pthread_t getclientid;
+                    if( pthread_create(&getclientid , NULL ,  getcommandExecution , (void*)&obj1) < 0)
                     {
-                        char *clt = new char[complexdata.length() + 1];
-                        strcpy(clt, complexdata.c_str());
-                        send(sock , clt , strlen(clt) , 0 );
-                        char buff[1024] = {0}; 
-                        read( sock , buff, 1024);
+                        perror("\ncould not create thread in client side\n");
                     }
-                }
-                else
-                {
-                    cout<<"ERROR IN DOWNLOADING FILE"<<endl;
-                }
 
             }
 

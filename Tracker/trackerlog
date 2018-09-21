@@ -1,41 +1,25 @@
 ******Connection accepted in tracker side*******
-Tracker get Data from Client : share#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8880#../os1
+Tracker get Data from Client : share#1175687c2633f5099f5c952724d5ba496ae20b41#127.0.0.1:8976#../video.mp4
 Tracker executing for SHARE command !!!
 ****************seederlist Data**************
-Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
-127.0.0.1:8880 -----> ../os1
+Data for Hash value : 1175687c2633f5099f5c952724d5ba496ae20b41
+127.0.0.1:8976 -----> ../video.mp4
 **********************************************
 Reply message sent from Tracker to client
 ******Connection accepted in tracker side*******
-Tracker get Data from Client : share#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8770#../os2
-Tracker executing for SHARE command !!!
-****************seederlist Data**************
-Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
-127.0.0.1:8880 -----> ../os1
-127.0.0.1:8770 -----> ../os2
-**********************************************
-Reply message sent from Tracker to client
-Tracker get Data from Client : get#cda7e8fa971867d3dd9f276588250199fa06453d
+Tracker get Data from Client : get#1175687c2633f5099f5c952724d5ba496ae20b41
 Tracker executing for GET command !!!
 ****************seederlist Data**************
-Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
-127.0.0.1:8880 -----> ../os1
-127.0.0.1:8770 -----> ../os2
+Data for Hash value : 1175687c2633f5099f5c952724d5ba496ae20b41
+127.0.0.1:8976 -----> ../video.mp4
 **********************************************
 Reply message sent from Tracker to client
-Tracker get Data from Client : share#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8770#../os3
+Tracker get Data from Client : share#1175687c2633f5099f5c952724d5ba496ae20b41#127.0.0.1:8980#../video1
 Tracker executing for SHARE command !!!
 ****************seederlist Data**************
-Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
-127.0.0.1:8880 -----> ../os1
-127.0.0.1:8770 -----> ../os2
-**********************************************
-Reply message sent from Tracker to client
-Tracker get Data from Client : remove#cda7e8fa971867d3dd9f276588250199fa06453d#127.0.0.1:8770
-Tracker executing for REMOVE command !!!
-****************seederlist Data**************
-Data for Hash value : cda7e8fa971867d3dd9f276588250199fa06453d
-127.0.0.1:8880 -----> ../os1
+Data for Hash value : 1175687c2633f5099f5c952724d5ba496ae20b41
+127.0.0.1:8976 -----> ../video.mp4
+127.0.0.1:8980 -----> ../video1
 **********************************************
 Reply message sent from Tracker to client
 Tracker get Data from Client : 
