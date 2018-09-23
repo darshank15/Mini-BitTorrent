@@ -14,10 +14,11 @@
 #include <sys/stat.h>
 #include <openssl/sha.h>
 #include <pthread.h>
+#include <dirent.h>
+
 using namespace std;
 
 extern const char *logpath;
-
 // extern int globalcurchunksize;
 
 //mtorrent generator's functions

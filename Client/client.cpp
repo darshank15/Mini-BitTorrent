@@ -14,7 +14,7 @@ struct complexData
 
 const char *logpath;
 string clientsocketstr, trackersocket1str, trackersocket2str;
-vector<string> listdownload;
+map<string, string> downloadstatus; //to maintain download status
 vector<pair<string, string>> clientfilepath;
 
 //***************************************************************************
@@ -85,6 +85,7 @@ int dofiletransfering(string replydata, string destpath)
     strcpy(clientreply, filepath.c_str());
     send(sock, clientreply, strlen(clientreply), 0);
     int n;
+    downloadstatus[destpath] = "D";
     do
     {
 
@@ -116,7 +117,7 @@ void *getcommandExecution(void *complexstruct)
     if (ans == 1)
     {
         cout << "FILE SUCCESSFULLY DOWNLOADED" << endl;
-        listdownload.push_back(destpath);
+        downloadstatus[destpath] = "S";
         vector<string> temptokens;
         temptokens.push_back("share");
         temptokens.push_back(destpath);
@@ -137,6 +138,53 @@ void *getcommandExecution(void *complexstruct)
     }
 
     return complexstruct;
+}
+
+//***************************************************************************
+// When client start it read all mtorrent file from current folder and
+// share its data with tracker automatically
+//***************************************************************************
+void readallmtorrentfile(int sc)
+{
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(".");
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {
+            string mtfile = string(dir->d_name);
+            string fileextention = ".mtorrent";
+            if (mtfile.find(fileextention) != string::npos)
+            {
+                ifstream fileptr(mtfile, ifstream::binary);
+                int count = 4;
+                string linecontent;
+                string fpath;
+                while ((count > 0) && getline(fileptr, linecontent))
+                {
+                    if (count == 2)
+                        fpath = linecontent;
+                    count--;
+                }
+                getline(fileptr, linecontent);
+                string mtorrenthash = linecontent;
+                fileptr.close();
+
+                char *longhash = new char[mtorrenthash.length() + 1];
+                strcpy(longhash, mtorrenthash.c_str());
+                string shorthash = calHashofchunk(longhash, mtorrenthash.length(), 0);
+                string ans = "share#" + shorthash + "#" + clientsocketstr + "#" + fpath;
+                char *clientrply = new char[ans.length() + 1];
+                strcpy(clientrply, ans.c_str());
+                send(sc, clientrply, strlen(clientrply), 0);
+                char buffer[1024] = {0};
+                read(sc, buffer, 1024);
+                writelog("read mtorrentfile sent to server & got response : " + string(buffer));
+            }
+        }
+        closedir(d);
+    }
 }
 
 //***************************************************************************
@@ -204,6 +252,7 @@ int main(int argc, char const *argv[])
             return -1;
         }
         writelog("******Connection stablished successfully with tracker!!!");
+        readallmtorrentfile(sock);
 
         //continuously listening to client for his entring command
         while (1)
@@ -213,9 +262,9 @@ int main(int argc, char const *argv[])
             char *mtorrentfilepath;
             string strcmd, destpath, getcmdmtorrentpath;
 
-            writelog("Enter the command : ");
+            //writelog("Enter the command : ");
             getline(cin >> ws, strcmd);
-            writelog("Command from cient : "+strcmd);
+            writelog("Command from cient : " + strcmd);
 
             vector<string> tokens;
             stringstream check1(strcmd);
@@ -276,16 +325,16 @@ int main(int argc, char const *argv[])
             }
             else if (tokens[0] == "show_downloads")
             {
-                if (listdownload.size() <= 0)
+                if (downloadstatus.empty())
                 {
                     cout << "NO DOWNLOADS TILL NOW" << endl;
                 }
                 else
                 {
                     cout << "********* DOWNLOADS **********" << endl;
-                    for (unsigned int i = 0; i < listdownload.size(); i++)
+                    for (auto item : downloadstatus)
                     {
-                        cout << listdownload[i] << endl;
+                        cout << item.second << " : " << item.first << endl;
                     }
                 }
                 continue;

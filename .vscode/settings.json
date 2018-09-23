@@ -6,6 +6,10 @@
         "vector": "cpp",
         "iosfwd": "cpp",
         "ostream": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "bitset": "cpp",
+        "optional": "cpp",
+        "system_error": "cpp",
+        "typeindex": "cpp"
     }
 }
