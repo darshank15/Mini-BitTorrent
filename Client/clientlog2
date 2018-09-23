@@ -3,17 +3,8 @@ Client socket : 127.0.0.1:8776
 Tracker 1 socket : 127.0.0.1:9090
 Tracker 2 socket : 123.98.78.10:1000
 ******Connection stablished successfully with tracker!!!
-SHARE command exe in client side
-Mtorrent creater called for filepath : ../test.txt
-Mtorrent Succesfully created
-share cmd gets Long Hash : e67501e6e11237b6ef84
-(SHARE cmd)Complex Data need to send to tracker :share#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8776#../test.txt
-client msg message sent to Tracker
-client(127.0.0.1:8776)got reply from tracker ===> FILE ALREADY SHARED
-REMOVE command exe in client side
-(REMOVE)Complex Data need to send to tracker :remove#4b30cb03eb9170ac8fd7880f4a11d257cb1f42ca#127.0.0.1:8776
-client msg message sent to Tracker
-client(127.0.0.1:8776)got reply from tracker ===> FILE SUCCESSFULLY REMOVED
-CLOSE command exe in client side
-client msg message sent to Tracker
-client(127.0.0.1:8776)got reply from tracker ===> CLIENT CLOSED
+Enter the command : 
+Command from cient : dbjbd
+Enter the command : 
+Command from cient : show_downloads
+Enter the command : 
