@@ -23,6 +23,31 @@ void writelog(string str)
     myfile.close();
 }
 
+vector<string> stringProcessing(string command, char delimeter)
+{
+    vector<string> temptokens;
+    string token="";
+    for(unsigned int i=0;i<command.length();i++)
+    {
+        char ch=command[i];
+        if(ch=='\\')
+        {
+            i++;
+            token += command[i];
+        }
+        else if(ch==delimeter)
+        {
+            temptokens.push_back(token);
+            token="";
+        }
+        else{
+            token += ch;
+        }
+    }
+    temptokens.push_back(token);
+    return temptokens;
+}
+
 //**********************************************************************
 //It reads seederlist and make Data structure ready for tracker
 //**********************************************************************
@@ -41,13 +66,7 @@ int readseederlist(char *fpath)
     while (getline(fp, linecontent))
     {
         string data = string(linecontent);
-        vector<string> tokens1;
-        stringstream check2(data);
-        string intermediate1;
-        while (getline(check2, intermediate1, ' '))
-        {
-            tokens1.push_back(intermediate1);
-        }
+        vector<string> tokens1=stringProcessing(data,' ');
         trackerdata td1(tokens1[0], tokens1[1], tokens1[2]);
         trackertable[td1.shash].push_back(td1);
     }
@@ -304,14 +323,14 @@ void *serverservice(void *socket_desc)
         string clientreplymsg;
 
         string data = string(buffer);
-        vector<string> tokens1;
-        stringstream check2(data);
-        string intermediate1;
-        // Tokenizing w.r.t. space '#'
-        while (getline(check2, intermediate1, '#'))
-        {
-            tokens1.push_back(intermediate1);
-        }
+        vector<string> tokens1=stringProcessing(data,'#');
+        // stringstream check2(data);
+        // string intermediate1;
+        // // Tokenizing w.r.t. space '#'
+        // while (getline(check2, intermediate1, '#'))
+        // {
+        //     tokens1.push_back(intermediate1);
+        // }
 
         if (tokens1[0] == "share")
         {

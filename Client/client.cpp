@@ -187,6 +187,31 @@ void readallmtorrentfile(int sc)
     }
 }
 
+vector<string> stringProcessing(string command, char delimeter)
+{
+    vector<string> temptokens;
+    string token="";
+    for(unsigned int i=0;i<command.length();i++)
+    {
+        char ch=command[i];
+        if(ch=='\\')
+        {
+            i++;
+            token += command[i];
+        }
+        else if(ch==delimeter)
+        {
+            temptokens.push_back(token);
+            token="";
+        }
+        else{
+            token += ch;
+        }
+    }
+    temptokens.push_back(token);
+    return temptokens;
+}
+
 //***************************************************************************
 // This is main client function from where client starts and comminicate
 // with tracker via socket programming
@@ -266,16 +291,7 @@ int main(int argc, char const *argv[])
             getline(cin >> ws, strcmd);
             writelog("Command from cient : " + strcmd);
 
-            vector<string> tokens;
-            stringstream check1(strcmd);
-            string intermediate;
-
-            // Tokenizing w.r.t. space ' '
-            while (getline(check1, intermediate, ' '))
-            {
-                tokens.push_back(intermediate);
-            }
-
+            vector<string> tokens=stringProcessing(strcmd,' ');
             string complexdata;
 
             // To handle which command enter by client

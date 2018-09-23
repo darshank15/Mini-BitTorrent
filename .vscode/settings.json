@@ -10,6 +10,7 @@
         "bitset": "cpp",
         "optional": "cpp",
         "system_error": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "istream": "cpp"
     }
 }
